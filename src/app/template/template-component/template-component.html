@@ -1,0 +1,39 @@
+<header class="bg-gradient-to-r from-gray-700 to-gray-900 text-white p-10 shadow-lg">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold">PedidosApp</h1>
+        <p class="text-lg mt-1">Tela de xxxxx</p>
+    </div>
+    <div>
+        <hr class="mt-2">
+    </div >
+        <nav style="cursor: pointer" class="mt-2">
+            <ul class="flex justify-center gap-6 text-white font-semibold">
+                <li>
+                    <a class="flex flex-col items-center text-gray-500 hover:text-blue-600">
+                        <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="clientes" class="flex flex-col items-center text-gray-500 hover:text-blue-600">
+                        <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                        Clientes
+                    </a>
+                </li>
+                <li>
+                    <a class="flex flex-col items-center text-gray-500 hover:text-blue-600">
+                    <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                        Faturamento
+                    </a>
+                </li>
+                <li>
+                       <a (click)="logout()" class="flex flex-col items-center text-gray-500 hover:text-blue-600">
+                        <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                        Logout
+                    </a>
+                </li>
+          
+            </ul>
+        </nav>
+</header>
+<router-outlet> </router-outlet>

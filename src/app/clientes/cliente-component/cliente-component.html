@@ -1,0 +1,95 @@
+<div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
+    <h1 class="text-2xl font-semibold text-center mb-2">Clientes</h1>
+        <hr class="border-l mb-2">
+
+    <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+       <select class="border p-2 rounded w-full mb-2">
+            <option>Consultar clientes</option>
+       </select>
+
+        <button (click)="consultar()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800">
+        Consultar
+        </button>
+    </div> 
+
+    <hr class="mt-2">
+    <span class="font-semibold flex justify-center"> OU </span>
+    
+    <div class="flex justify-center mt-2">
+         <button (click)="mostrarFormulario()" class=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 ml-3">
+        Cadastrar novo Cliente</button>
+    </div>
+
+ <div class="m-2">
+    
+    @if(cadastrar){
+    <form [formGroup]="camposForm" (ngSubmit)="salvar()" class="mt-4">
+        <div class="pb-2">
+            <label for="nome">Nome:</label>        
+            <input id="nome" formControlName="nome" placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" />
+
+        @if(isCampoInvalido('nome')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+        </div>
+     
+
+        <div class="pb-2">
+            <label for="cnpj">CNPJ:</label>
+            <input id="cnpj" formControlName="cnpj"
+            mask="000.000.000/0000-00"
+            placeholder="Ex: 111.111.111/00001-10"
+            class="border p-2 rounded w-full mb-2" />
+
+            
+            @if(isCampoInvalido('cnpj')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+        </div>
+
+
+
+        <label for="cep">CEP:</label>
+        <input id="cep" type="text" formControlName="cep" 
+        mask="00000-000"
+        placeHolder="Ex: 12345-670"
+        class="border p-2 rounded w-full mb-2" />
+
+        <label for="endereco">Enredeço:</label>
+        <input id="endereco" 
+        placeholder="Ex: Avenida Morumbí, 400"
+        formControlName="endereco" class="border p-2 rounded w-full mb-2" />
+
+        <div>
+            <label  for="uf">Estado:</label>
+            <select class="border p-2 rounded w-full mb-2" (change)="carregarMunicipios($event)" formControlName="uf">
+                @for(estado of estados; track estado.sigla){
+                <option [value]="estado.sigla">{{ estado.nome }}</option>
+                }
+            </select>
+        </div>
+     
+        
+        <div>
+            <label for="municipio">Município:</label>
+            <select class="border p-2 rounded w-full mb-2" formControlName="municipio">
+                @for(municipio of municipios; track municipio.nome){
+                <option [value]="municipio.nome">{{ municipio.nome }}</option>
+                }
+            </select>
+        </div>
+    
+        <label for="df">Diferencial de Alíquota - informar em % :</label>
+        <input id="df" formControlName="df" placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
+
+        <div class="flex justify-center">
+            <button type="submit" (click)="salvar()" class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Enviar</button>
+        </div>
+    </form>
+    }
+
+</div>  
