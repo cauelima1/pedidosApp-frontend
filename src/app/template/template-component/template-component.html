@@ -10,25 +10,25 @@
             <ul class="flex justify-center gap-6 text-white font-semibold">
                 <li>
                     <a class="flex flex-col items-center text-gray-500 hover:text-blue-600">
-                        <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                        <mat-icon routerLink="home" fontIcon="home" class="text-2xl mb-1"></mat-icon>
                         Home
                     </a>
                 </li>
                 <li>
                     <a routerLink="clientes" class="flex flex-col items-center text-gray-500 hover:text-blue-600">
-                        <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                        <mat-icon fontIcon="group" class="text-2xl mb-1"></mat-icon>
                         Clientes
                     </a>
                 </li>
                 <li>
                     <a class="flex flex-col items-center text-gray-500 hover:text-blue-600">
-                    <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                    <mat-icon fontIcon="attach_money" class="text-2xl mb-1"></mat-icon>
                         Faturamento
                     </a>
                 </li>
                 <li>
                        <a (click)="logout()" class="flex flex-col items-center text-gray-500 hover:text-blue-600">
-                        <mat-icon fontIcon="home" class="text-2xl mb-1"></mat-icon>
+                        <mat-icon fontIcon="remove_circle_outline" class="text-2xl mb-1"></mat-icon>
                         Logout
                     </a>
                 </li>
@@ -36,4 +36,5 @@
             </ul>
         </nav>
 </header>
+
 <router-outlet> </router-outlet>

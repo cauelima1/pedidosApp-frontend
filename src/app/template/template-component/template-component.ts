@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { MatIconModule} from'@angular/material/icon'
 import { LoginService } from '../../login/login-service';
-import { Router } from '@angular/router';
+import { Login } from '../../login/login/login';
+
 
 @Component({
   selector: 'app-template-component',
@@ -11,24 +11,9 @@ import { Router } from '@angular/router';
 })
 export class TemplateComponent {
 
-  constructor(private loginService: LoginService,
-    private router: Router
-  ){
+  constructor(private login: LoginService){
   }
- 
-  logout(): void {
-    this.loginService.logout().subscribe({
-      next: () => {
-        this.loginService.clearSession();
-        this.router.navigate(['/login']);
-      },
-      error: err => {
-        console.error('Erro ao fazer logout:', err);
-        this.loginService.clearSession();
-        this.router.navigate(['/login']);
-      }});
-
-
+  logout(){
+    this.login.logout();
   }
-  
 }

@@ -1,9 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { Cliente } from './cliente-component/clienteModel';
+import { Component, Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ClienteComponent } from './cliente-component/cliente-component';
+import { Cliente } from './cliente-component/clienteModel';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,30 +13,32 @@ export class ClienteService {
   snack: MatSnackBar = inject(MatSnackBar);
 
   constructor(private http: HttpClient) {
-
   }
 
-saveCliente(client: Cliente): Observable<Cliente> {
-    const token = localStorage.getItem('jwtToken');
-    console.log("jwtToken antes de cadastrar cliente: ", token)
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    if (token){
-        return this.http.post<Cliente>(this.apiUrl, client, { headers });
-      } else {
-        console.log("Erro Token client-service");
+  component?: Component;
 
-      return new Observable<Cliente>((observer) => {
-        observer.error('Token not found');
-      });
-    }
+saveCliente(cliente: Cliente) : Observable<Cliente> {
+       const headers = this.captarHeaders();
+        return this.http.post(this.apiUrl, cliente, { headers })
+  }
+ 
+  listaClientes() : Observable<Cliente[]> {
+    const headers = this.captarHeaders();
+    return this.http.get<Cliente[]>(this.apiUrl, {headers},);
   }
 
-    
+
   mostrarMensagem(mensagem: string) {
     this.snack.open(mensagem, 'OK',{ duration: 3000});
   } 
 
-    }
+  captarHeaders(): HttpHeaders {
+    const token = localStorage.getItem("jwtToken");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return headers;
+  }
+
+}
  
 
 

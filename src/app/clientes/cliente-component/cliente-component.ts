@@ -4,9 +4,7 @@ import { Estado, Municipio } from '../../brasilapi.models';
 import { BrasilapiService } from '../../brasilapi-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cliente } from './clienteModel';
-import { MatIconModule } from '@angular/material/icon';
 import { ClienteService } from '../cliente-service';
-import { HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -18,11 +16,30 @@ import { HttpHeaders } from '@angular/common/http';
 export class ClienteComponent implements OnInit  {
   estados: Estado[] = [];
   municipios: Municipio[] = [];
+  clientes: Cliente [] = []; 
   cadastrar: boolean = false;
+  pesquisar: boolean = false;
   snack: MatSnackBar = inject(MatSnackBar);
+  cadastroForm: FormGroup;
+  selecionarCliente?: Cliente;
 
 
-  camposForm: FormGroup = new FormGroup({
+  clienteSelecionado: Cliente = {
+  nome: '',
+  cnpj: 0,
+  obs: '',
+  cep: '',
+  endereco: '',
+  municipio: '',
+  uf: '',
+  df: 0,
+  isICMS: false
+};
+ 
+    constructor (private brasilapiService: BrasilapiService,
+                 private clienteService: ClienteService) {
+      
+      this.cadastroForm = new FormGroup({
       nome: new FormControl('', Validators.required),
       cnpj: new FormControl('', Validators.required),
       cep: new FormControl(''),
@@ -30,48 +47,70 @@ export class ClienteComponent implements OnInit  {
       municipio: new FormControl(''),
       uf : new FormControl(''),
       df: new FormControl(''),
-      contribuinteICMS: new FormControl('')
-    });
+      obs: new FormControl(''),
+      isICMS: new FormControl('')
 
-    constructor (private brasilapiService: BrasilapiService,
-                 private clienteService: ClienteService) {}
+ });
+ 
+}
 
 
   ngOnInit(): void {
     this.carregarUfs();
+    this.carregarClientes();
   }
-
-
 
     
   consultar () {
-    //implementar a partir do backend
+    if(this.selecionarCliente){
+      this.clienteSelecionado = this.selecionarCliente;
+      this.pesquisar = true;
+    } else {
+      this.mostrarMensagem("Nenhum cliente selecionado");
+    }  
   }
 
 
   salvar() {
-    this.camposForm.markAllAsTouched();
+    this.cadastroForm.markAllAsTouched();
 
-    if(this.camposForm.valid){
-      let clienteDto = {
-        id: 0,
-        nome: String(this.camposForm.value.nome),
-        cnpj: Number(this.camposForm.value.cnpj),
-        cep: String(this.camposForm.value.cep),
-        endereco: String(this.camposForm.value.endereco),
-        municipio: String(this.camposForm.value.municipio),
-        uf: String(this.camposForm.value.uf),
-        df: Number(this.camposForm.value.df),
-        isContribuinteICMS: !!this.camposForm.value.contribuinteICMS
-      };
-      console.log("Salvando cliente: ", clienteDto);
-      this.clienteService.saveCliente(clienteDto);
+    if(this.cadastroForm.valid){
+        this.clienteService.saveCliente(this.cadastroForm.value) .subscribe({
+          next: () => {this.mostrarMensagem("Cliente cadastrado com sucesso")
+            this.esconderFormulario();
+            this.cadastroForm.reset();
+            this.carregarClientes();
+        },
+          error: ()=> this.mostrarMensagem("Ocorreu algum erro, verifique e tente novamente!")
+    });
     }
-    
+}
+
+  limparFormulario(){
+    this.cadastroForm.reset();
   }
 
   mostrarFormulario(){
     this.cadastrar = true;
+  }
+
+  esconderFormulario(){
+    this.cadastrar = false;
+  }
+
+  mostrarPesquisa(){
+    this.pesquisar = true;
+  }
+
+  esconderPesquisa(){
+    this.pesquisar = false;
+  }
+
+  carregarClientes(){
+    this.clienteService.listaClientes().subscribe({
+      next: (listaClientes) => this.clientes = listaClientes.sort((a, b) => (a.nome ?? '').localeCompare(b.nome ?? '')),
+      error: () => ("Erro durante o processo de listagem de clientes")
+    })
   }
 
   carregarUfs() {
@@ -91,7 +130,7 @@ export class ClienteComponent implements OnInit  {
 
   
   isCampoInvalido(campo: string): boolean {
-    const nomeCampo = this.camposForm.get(campo);
+    const nomeCampo = this.cadastroForm.get(campo);
     return nomeCampo?.invalid && nomeCampo?.touched || false;
   }
 
@@ -99,10 +138,6 @@ export class ClienteComponent implements OnInit  {
   mostrarMensagem(mensagem: string) {
     this.snack.open(mensagem, 'OK',{ duration: 3000});
   } 
-
-
-
-
 
 
   }

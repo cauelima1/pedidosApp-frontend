@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -22,16 +21,9 @@ export class LoginService {
 
    logar(user: {username: string; password: string}){
       return this.http.post(this.apiUrl + "/login", user,{ responseType: 'text' })
-      .subscribe({
-          next: (res: any) => { 
-            this.saveToken(res);
-            console.log("Token recebido:", res);
-            this.router.navigate(['/home']);},
-          error: (err) => console.log("Falha no Login")});
-        }
 
-   
-
+    }
+  
    saveToken(token: string){
     localStorage.setItem('jwtToken', token);
    }
@@ -40,18 +32,19 @@ export class LoginService {
     return localStorage.getItem('jwtToken');
    }
 
-   logout(): Observable<any> {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-      return throwError(() => new Error('Token não encontrado'));
-    }
+   logout() {
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    this.clearSession();
 
-    const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}`
-    });
-    console.log("token inserido na blacklist para Logout: "  + token);
-    return this.http.post(this.apiUrl + '/logout', {}, { headers });
-  }
+    return this.http.post<void>(this.apiUrl + '/logout', {}, { headers }).subscribe({
+    next: () => {
+      console.log("Logout efetuado com sucesso");
+      this.router.navigate(['/login']);
+    },
+    error: () => console.log("Erro logout!")
+  });
+}
 
   clearSession(): void {
     localStorage.removeItem('jwtToken');

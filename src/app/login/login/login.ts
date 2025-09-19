@@ -20,8 +20,7 @@ export class Login {
 
 
 
-constructor(private service: LoginService, private route: ActivatedRoute,
-    private router: Router){
+constructor(private service: LoginService, private router: Router){
 
       this.cadastroForm = new FormGroup({
       username: new FormControl('', Validators.required),
@@ -43,10 +42,8 @@ constructor(private service: LoginService, private route: ActivatedRoute,
   
     if(this.cadastroForm.valid){
       this.service.salvar(this.cadastroForm.value).subscribe({
-        next: (res: any) =>  this.mostrarMensagem('Cadastro com sucesso!'),
-        error: (err: any) => {
-          this.mostrarMensagem('Erro: Usuário já cadastrado!');
-        } 
+        next: () =>  this.mostrarMensagem('Cadastro com sucesso!'),
+        error: () =>this.mostrarMensagem('Erro: Usuário já cadastrado!')
       });
       } 
     }
@@ -55,7 +52,12 @@ constructor(private service: LoginService, private route: ActivatedRoute,
     this.loginForm.markAllAsTouched;
 
     if(this.loginForm.valid){
-      this.service.logar(this.loginForm.value);
+      this.service.logar(this.loginForm.value).subscribe({
+          next: (token) => { 
+            this.service.saveToken(token);
+            this.mostrarMensagem("Login efetuado com sucesso");
+            this.router.navigate(['/home']);},
+          error: () => this.mostrarMensagem("Falha no Login")});
     } 
   }
 
@@ -80,4 +82,5 @@ constructor(private service: LoginService, private route: ActivatedRoute,
     mostrarMensagem(mensagem: string) {
     this.snack.open(mensagem, 'OK',{ duration: 3000});
   } 
+
 }

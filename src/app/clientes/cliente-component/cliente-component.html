@@ -2,28 +2,32 @@
     <h1 class="text-2xl font-semibold text-center mb-2">Clientes</h1>
         <hr class="border-l mb-2">
 
-    <div class="flex flex-col md:flex-row items-center justify-center gap-4">
-       <select class="border p-2 rounded w-full mb-2">
-            <option>Consultar clientes</option>
+    
+       <select [(ngModel)]="selecionarCliente" name="clienteSelecionado" class="border p-2 rounded w-full mb-2 text-lg" >
+            <option [ngValue]="null">Selecione um cliente</option>
+            @for(cliente of clientes; track cliente.nome){
+                <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
+            }
        </select>
+  
 
-        <button (click)="consultar()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800">
-        Consultar
+        <button (click)="consultar()" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-blue-800">
+        <label class="text-lg">Consultar</label>
         </button>
-    </div> 
 
-    <hr class="mt-2">
+
+    <hr class="mt-4 mb-2">
     <span class="font-semibold flex justify-center"> OU </span>
     
     <div class="flex justify-center mt-2">
-         <button (click)="mostrarFormulario()" class=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 ml-3">
-        Cadastrar novo Cliente</button>
+         <button name="cadastrarNovoCliente"(click)="mostrarFormulario()"  class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800">
+       <label class="text-lg">Cadastrar novo Cliente</label></button>
     </div>
 
- <div class="m-2">
+
     
     @if(cadastrar){
-    <form [formGroup]="camposForm" (ngSubmit)="salvar()" class="mt-4">
+    <form [formGroup]="cadastroForm" (ngSubmit)="salvar()" class="mt-4">
         <div class="pb-2">
             <label for="nome">Nome:</label>        
             <input id="nome" formControlName="nome" placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" />
@@ -51,18 +55,29 @@
             }
         </div>
 
+        <div>
+            <label for="obs">Observações:</label>
+            <textarea id="obs" formControlName="obs" 
+            
+            placeHolder="Ex: Contatos da empresa, observaçoes pertinentes..."
+            class="border p-2 rounded w-full mb-2" ></textarea>
+        </div>
 
 
-        <label for="cep">CEP:</label>
-        <input id="cep" type="text" formControlName="cep" 
-        mask="00000-000"
-        placeHolder="Ex: 12345-670"
-        class="border p-2 rounded w-full mb-2" />
+        <div>
+            <label for="cep">CEP:</label>
+            <input id="cep" type="text" formControlName="cep" 
+            mask="00000-000"
+            placeHolder="Ex: 12345-670"
+            class="border p-2 rounded w-full mb-2" />
+        </div>
 
-        <label for="endereco">Enredeço:</label>
-        <input id="endereco" 
-        placeholder="Ex: Avenida Morumbí, 400"
-        formControlName="endereco" class="border p-2 rounded w-full mb-2" />
+        <div>
+            <label for="endereco">Enredeço:</label>
+            <input id="endereco" 
+            placeholder="Ex: Avenida Morumbí, 400"
+            formControlName="endereco" class="border p-2 rounded w-full mb-2" />
+        </div>
 
         <div>
             <label  for="uf">Estado:</label>
@@ -72,8 +87,8 @@
                 }
             </select>
         </div>
-     
-        
+
+           
         <div>
             <label for="municipio">Município:</label>
             <select class="border p-2 rounded w-full mb-2" formControlName="municipio">
@@ -86,10 +101,123 @@
         <label for="df">Diferencial de Alíquota - informar em % :</label>
         <input id="df" formControlName="df" placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
 
-        <div class="flex justify-center">
-            <button type="submit" (click)="salvar()" class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Enviar</button>
+
+        <div>
+            <label  for="isICMS">Tributa ICMS?</label>
+            <select class="border p-2 rounded w-full mb-2" formControlName="isICMS" name="isICMS">
+                <option [value]="true">Sim</option>
+                <option [value]="false">Não</option>
+            </select>
+        </div>
+
+        <div class="flex justify-center mt-4">
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Enviar</button>
         </div>
     </form>
     }
 
 </div>  
+
+
+
+<div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
+
+ @if(pesquisar){
+    <form #ngform="ngForm" (ngSubmit)="consultar()" class="mt-4">
+        <div class="pb-2">
+            <label for="nome">Nome:</label>        
+            <input id="nome" [(ngModel)]="clienteSelecionado.nome" name="nome" placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" />
+
+        @if(isCampoInvalido('nome')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+        </div>
+     
+
+        <div class="pb-2">
+            <label for="cnpj">CNPJ:</label>
+            <input id="cnpj" [(ngModel)]="clienteSelecionado.cnpj"
+            name="cnpj"
+            mask="000.000.000/0000-00"
+            placeholder="Ex: 111.111.111/00001-10"
+            class="border p-2 rounded w-full mb-2" />
+
+            
+            @if(isCampoInvalido('cnpj')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+        </div>
+
+        <div>
+            <label for="obs">Observações:</label>
+            <textarea id="obs" [(ngModel)]="clienteSelecionado.obs" 
+            name="obs"
+            placeHolder="Ex: Contatos da empresa, observaçoes pertinentes..."
+            class="border p-2 rounded w-full mb-2" ></textarea>
+        </div>
+
+
+        <div>
+            <label for="cep">CEP:</label>
+            <input id="cep" type="text" [(ngModel)]="clienteSelecionado.cep" 
+            name="cep"
+            mask="00000-000"
+            placeHolder="Ex: 12345-670"
+            class="border p-2 rounded w-full mb-2" />
+        </div>
+
+        <div>
+            <label for="endereco">Enredeço:</label>
+            <input id="endereco" 
+            placeholder="Ex: Avenida Morumbí, 400"
+            [(ngModel)]="clienteSelecionado.endereco" name="endereco" class="border p-2 rounded w-full mb-2" />
+        </div>
+
+        <div>
+            <label  for="uf">Estado:</label>
+            <select class="border p-2 rounded w-full mb-2" [(ngModel)]="clienteSelecionado.uf" name="uf" (change)="carregarMunicipios($event)">
+                <option [value]="clienteSelecionado.uf">{{clienteSelecionado.uf}}</option>
+                @for(estado of estados; track estado.sigla){
+                <option [value]="estado.sigla">{{ estado.nome }}</option>
+                }
+            </select>
+        </div>
+
+           
+        <div>
+            <label for="municipio">Município:</label>
+            <select class="border p-2 rounded w-full mb-2" [(ngModel)]="clienteSelecionado.municipio" name="municipio">
+                <option [value]="clienteSelecionado.municipio">{{clienteSelecionado.municipio}}</option>
+                @for(municipio of municipios; track municipio.nome){
+                <option [value]="municipio.nome">{{ municipio.nome }}</option>
+                }
+            </select>
+        </div>
+    
+        <label for="df">Diferencial de Alíquota - informar em % :</label>
+        <input id="df" [(ngModel)]="clienteSelecionado.df" name="df" placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
+
+<div>
+  <label for="isICMS">Tributa ICMS:</label>
+  <select
+    class="border p-2 rounded w-full mb-2"
+    [(ngModel)]="clienteSelecionado.isICMS"
+    name="isICMS"
+  >
+    <option [value]="true">Sim</option>
+    <option [value]="false">Não</option>
+  </select>
+</div>
+
+
+
+        <div class="flex justify-center mt-4">
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Atualizar</button>
+        </div>
+    </form>
+}
+</div>

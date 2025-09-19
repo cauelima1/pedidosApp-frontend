@@ -1,5 +1,4 @@
 export class Cliente {
-    id?: number;
     nome?: string;
     cnpj?: number;
     cep?: string;
@@ -7,5 +6,8 @@ export class Cliente {
     municipio?: string;
     uf?: string;
     df?: number;
-    isContribuinteICMS?: boolean; 
+    obs?: string;
+    isICMS?: boolean
+
+
 }
