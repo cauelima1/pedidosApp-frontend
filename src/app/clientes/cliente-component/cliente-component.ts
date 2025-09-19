@@ -22,6 +22,8 @@ export class ClienteComponent implements OnInit  {
   snack: MatSnackBar = inject(MatSnackBar);
   cadastroForm: FormGroup;
   selecionarCliente?: Cliente;
+  formDesabilitado: boolean = true;
+
 
 
   clienteSelecionado: Cliente = {
@@ -48,7 +50,7 @@ export class ClienteComponent implements OnInit  {
       uf : new FormControl(''),
       df: new FormControl(''),
       obs: new FormControl(''),
-      isICMS: new FormControl('')
+      isICMS: new FormControl(null)
 
  });
  
@@ -62,29 +64,62 @@ export class ClienteComponent implements OnInit  {
 
     
   consultar () {
+    if(this.cadastrar){
+      this.esconderFormulario();
+    }
     if(this.selecionarCliente){
-      this.clienteSelecionado = this.selecionarCliente;
+      this.clienteSelecionado = this.clientes.find(c => c.nome === this.selecionarCliente?.nome)!;
+      console.log("Cliente selecionado", this.clienteSelecionado);
       this.pesquisar = true;
     } else {
       this.mostrarMensagem("Nenhum cliente selecionado");
     }  
   }
 
+  alterarCliente(){
+    this.clienteService.confirmarAlteracao(this.clienteSelecionado).subscribe({
+      next: () => { this.mostrarMensagem("Cliente alterado com sucesso!")
+        this.esconderPesquisa()
+        this.carregarClientes()
+      },
+      error: () => this.mostrarMensagem("Erro ao alterar cliente!")
+    });
+    window.location.reload();
+  }
+
 
   salvar() {
     this.cadastroForm.markAllAsTouched();
-
+    if(this.pesquisar){
+      this.esconderPesquisa();
+    }
     if(this.cadastroForm.valid){
-        this.clienteService.saveCliente(this.cadastroForm.value) .subscribe({
+        this.clienteService.saveCliente(this.cadastroForm.value).subscribe({
           next: () => {this.mostrarMensagem("Cliente cadastrado com sucesso")
             this.esconderFormulario();
             this.cadastroForm.reset();
             this.carregarClientes();
+            window.location.reload();
         },
           error: ()=> this.mostrarMensagem("Ocorreu algum erro, verifique e tente novamente!")
     });
     }
+    window.location.reload();
 }
+
+  deletar(){
+    const confirmar = window.confirm('Tem certeza que deseja excluir este cliente?');
+    const cnpj = this.clienteSelecionado.cnpj;
+    if (confirmar && cnpj){
+      this.clienteService.deletarCliente(cnpj).subscribe({
+        next: () => this.mostrarMensagem("Cliente deletado com sucesso!"),
+        error: () => this.mostrarMensagem("Falha ao deletar cliente!")
+      })
+    }
+    
+    
+    window.location.reload();
+  }
 
   limparFormulario(){
     this.cadastroForm.reset();
@@ -92,6 +127,9 @@ export class ClienteComponent implements OnInit  {
 
   mostrarFormulario(){
     this.cadastrar = true;
+    if(this.pesquisar){
+      this.pesquisar=false;
+    }
   }
 
   esconderFormulario(){
@@ -105,6 +143,7 @@ export class ClienteComponent implements OnInit  {
   esconderPesquisa(){
     this.pesquisar = false;
   }
+
 
   carregarClientes(){
     this.clienteService.listaClientes().subscribe({

@@ -21,10 +21,21 @@ saveCliente(cliente: Cliente) : Observable<Cliente> {
        const headers = this.captarHeaders();
         return this.http.post(this.apiUrl, cliente, { headers })
   }
+
+  confirmarAlteracao(cliente: Cliente) : Observable<Cliente> {
+       const headers = this.captarHeaders();
+        return this.http.put(this.apiUrl, cliente, { headers })
+  }
  
   listaClientes() : Observable<Cliente[]> {
     const headers = this.captarHeaders();
     return this.http.get<Cliente[]>(this.apiUrl, {headers},);
+  }
+
+  deletarCliente(cnpj: number): Observable<Cliente[]> {
+    const headers = this.captarHeaders();
+    const url = `${this.apiUrl}/${cnpj}`;
+    return this.http.delete<Cliente[]>(url ,{ headers })
   }
 
 

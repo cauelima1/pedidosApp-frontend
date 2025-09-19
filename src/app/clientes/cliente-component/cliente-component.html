@@ -3,7 +3,7 @@
         <hr class="border-l mb-2">
 
     
-       <select [(ngModel)]="selecionarCliente" name="clienteSelecionado" class="border p-2 rounded w-full mb-2 text-lg" >
+       <select [(ngModel)]="selecionarCliente" name="selecionarCliente" class="border p-2 rounded w-full mb-2 text-lg" >
             <option [ngValue]="null">Selecione um cliente</option>
             @for(cliente of clientes; track cliente.nome){
                 <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
@@ -115,18 +115,17 @@
         </div>
     </form>
     }
-
 </div>  
-
 
 
 <div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
 
  @if(pesquisar){
-    <form #ngform="ngForm" (ngSubmit)="consultar()" class="mt-4">
+    <form #ngform="ngForm" (ngSubmit)="alterarCliente()" class="mt-4">
         <div class="pb-2">
             <label for="nome">Nome:</label>        
-            <input id="nome" [(ngModel)]="clienteSelecionado.nome" name="nome" placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" />
+            <input id="nome" [(ngModel)]="clienteSelecionado.nome" name="nome" [disabled]="formDesabilitado"
+            placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" required/>
 
         @if(isCampoInvalido('nome')){ 
             <span class="text-red-500 text-sm">
@@ -138,7 +137,7 @@
 
         <div class="pb-2">
             <label for="cnpj">CNPJ:</label>
-            <input id="cnpj" [(ngModel)]="clienteSelecionado.cnpj"
+            <input id="cnpj" [(ngModel)]="clienteSelecionado.cnpj" readonly
             name="cnpj"
             mask="000.000.000/0000-00"
             placeholder="Ex: 111.111.111/00001-10"
@@ -154,7 +153,7 @@
 
         <div>
             <label for="obs">Observações:</label>
-            <textarea id="obs" [(ngModel)]="clienteSelecionado.obs" 
+            <textarea id="obs" [(ngModel)]="clienteSelecionado.obs" [disabled]="formDesabilitado"
             name="obs"
             placeHolder="Ex: Contatos da empresa, observaçoes pertinentes..."
             class="border p-2 rounded w-full mb-2" ></textarea>
@@ -163,7 +162,7 @@
 
         <div>
             <label for="cep">CEP:</label>
-            <input id="cep" type="text" [(ngModel)]="clienteSelecionado.cep" 
+            <input id="cep" type="text" [(ngModel)]="clienteSelecionado.cep" [disabled]="formDesabilitado"
             name="cep"
             mask="00000-000"
             placeHolder="Ex: 12345-670"
@@ -173,13 +172,14 @@
         <div>
             <label for="endereco">Enredeço:</label>
             <input id="endereco" 
-            placeholder="Ex: Avenida Morumbí, 400"
-            [(ngModel)]="clienteSelecionado.endereco" name="endereco" class="border p-2 rounded w-full mb-2" />
+            placeholder="Ex: Avenida Morumbí, 400" 
+            [disabled]="formDesabilitado" [(ngModel)]="clienteSelecionado.endereco" name="endereco" class="border p-2 rounded w-full mb-2" />
         </div>
 
         <div>
             <label  for="uf">Estado:</label>
-            <select class="border p-2 rounded w-full mb-2" [(ngModel)]="clienteSelecionado.uf" name="uf" (change)="carregarMunicipios($event)">
+            <select class="border p-2 rounded w-full mb-2" 
+            [disabled]="formDesabilitado" [(ngModel)]="clienteSelecionado.uf" name="uf" (change)="carregarMunicipios($event)">
                 <option [value]="clienteSelecionado.uf">{{clienteSelecionado.uf}}</option>
                 @for(estado of estados; track estado.sigla){
                 <option [value]="estado.sigla">{{ estado.nome }}</option>
@@ -190,7 +190,8 @@
            
         <div>
             <label for="municipio">Município:</label>
-            <select class="border p-2 rounded w-full mb-2" [(ngModel)]="clienteSelecionado.municipio" name="municipio">
+            <select class="border p-2 rounded w-full mb-2" 
+            [disabled]="formDesabilitado" [(ngModel)]="clienteSelecionado.municipio" name="municipio">
                 <option [value]="clienteSelecionado.municipio">{{clienteSelecionado.municipio}}</option>
                 @for(municipio of municipios; track municipio.nome){
                 <option [value]="municipio.nome">{{ municipio.nome }}</option>
@@ -199,25 +200,36 @@
         </div>
     
         <label for="df">Diferencial de Alíquota - informar em % :</label>
-        <input id="df" [(ngModel)]="clienteSelecionado.df" name="df" placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
+        <input id="df" [(ngModel)]="clienteSelecionado.df" name="df" [disabled]="formDesabilitado"
+        placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
 
-<div>
-  <label for="isICMS">Tributa ICMS:</label>
-  <select
-    class="border p-2 rounded w-full mb-2"
-    [(ngModel)]="clienteSelecionado.isICMS"
-    name="isICMS"
-  >
-    <option [value]="true">Sim</option>
-    <option [value]="false">Não</option>
-  </select>
-</div>
+        <div class="mt-2">
+            <label class="mt-2">Tributa ICMS:</label>
+            @if(clienteSelecionado.isICMS == true) {
+            <p class="font-bold">SIM</p>
+            } @else {
+            <p class="font-bold">NÃO</p>
+            }
 
-
-
-        <div class="flex justify-center mt-4">
-            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Atualizar</button>
         </div>
+
+        <hr class="mt-2">
+
+       <div class="flex flex-row justify-center mt-4">
+        <button type="button" (click)="formDesabilitado = false" class="w-full bg-blue-500 text-white px-4 py-2 rounded mb-4">
+            Editar</button>
+
+            <button type="button" (click)="deletar()" class=" w-full bg-red-500 text-white px-4 py-2 rounded mb-4">
+            Deletar</button>
+       </div>
+
+            
+        <div class="flex justify-center mt-4">
+            <button type="submit"
+            [disabled]="formDesabilitado"
+             class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Atualizar</button>
+        </div>
+
     </form>
 }
 </div>
