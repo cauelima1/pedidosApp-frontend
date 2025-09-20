@@ -84,12 +84,12 @@ export class ClienteComponent implements OnInit  {
       },
       error: () => this.mostrarMensagem("Erro ao alterar cliente!")
     });
-    window.location.reload();
   }
 
 
   salvar() {
     this.cadastroForm.markAllAsTouched();
+
     if(this.pesquisar){
       this.esconderPesquisa();
     }
@@ -99,12 +99,10 @@ export class ClienteComponent implements OnInit  {
             this.esconderFormulario();
             this.cadastroForm.reset();
             this.carregarClientes();
-            window.location.reload();
         },
           error: ()=> this.mostrarMensagem("Ocorreu algum erro, verifique e tente novamente!")
     });
     }
-    window.location.reload();
 }
 
   deletar(){
@@ -116,10 +114,11 @@ export class ClienteComponent implements OnInit  {
         error: () => this.mostrarMensagem("Falha ao deletar cliente!")
       })
     }
-    
-    
     window.location.reload();
   }
+
+
+
 
   limparFormulario(){
     this.cadastroForm.reset();
