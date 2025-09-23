@@ -5,8 +5,7 @@ export class Cliente {
     endereco?: string;
     municipio?: string;
     uf?: string;
-    df?: number;
+    df?: string;
     obs?: string;
-    isICMS?: boolean
 
 }

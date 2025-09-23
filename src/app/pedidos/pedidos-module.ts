@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { PedidosRoutingModule } from './pedidos-routing-module';
 import { Pedido } from './pedido/pedido';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClientesModule } from '../clientes/clientes.module';
 
 
 @NgModule({
@@ -10,6 +12,9 @@ import { Pedido } from './pedido/pedido';
     Pedido
   ],
   imports: [
+
+    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     PedidosRoutingModule
   ]

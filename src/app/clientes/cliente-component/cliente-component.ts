@@ -34,8 +34,7 @@ export class ClienteComponent implements OnInit  {
   endereco: '',
   municipio: '',
   uf: '',
-  df: 0,
-  isICMS: false
+  df: ''
 };
  
     constructor (private brasilapiService: BrasilapiService,
@@ -49,8 +48,7 @@ export class ClienteComponent implements OnInit  {
       municipio: new FormControl(''),
       uf : new FormControl(''),
       df: new FormControl(''),
-      obs: new FormControl(''),
-      isICMS: new FormControl(null)
+      obs: new FormControl('')
 
  });
  
@@ -61,6 +59,29 @@ export class ClienteComponent implements OnInit  {
     this.carregarUfs();
     this.carregarClientes();
   }
+
+  
+  salvar() {
+    this.cadastroForm.markAllAsTouched();
+
+    if(this.pesquisar){
+      this.esconderPesquisa();
+    }
+    if(this.cadastroForm.valid){
+      const dfOriginal = this.cadastroForm.get('df')?.value ?? '';
+      const dfCorrigido = dfOriginal.replace(/,/g, '.');
+      this.cadastroForm.get('df')?.setValue(dfCorrigido);
+      console.log("DF de " , this.clienteSelecionado.nome , "é " , this.clienteSelecionado.df);
+        this.clienteService.saveCliente(this.cadastroForm.value).subscribe({
+          next: () => {this.mostrarMensagem("Cliente cadastrado com sucesso")
+            this.esconderFormulario();
+            this.cadastroForm.reset();
+            this.carregarClientes();
+        },
+          error: ()=> this.mostrarMensagem("Ocorreu algum erro, verifique e tente novamente!")
+    });
+    }
+}
 
     
   consultar () {
@@ -74,9 +95,16 @@ export class ClienteComponent implements OnInit  {
     } else {
       this.mostrarMensagem("Nenhum cliente selecionado");
     }  
+
   }
 
   alterarCliente(){
+     const dfOriginal = this.clienteSelecionado.df;
+     if(dfOriginal){
+      const dfCorrigido = dfOriginal.replace(/,/g, '.');
+      this.clienteSelecionado.df = dfCorrigido;
+      console.log("DF de " , this.clienteSelecionado.nome , "é " , this.clienteSelecionado.df);
+     }
     this.clienteService.confirmarAlteracao(this.clienteSelecionado).subscribe({
       next: () => { this.mostrarMensagem("Cliente alterado com sucesso!")
         this.esconderPesquisa()
@@ -87,23 +115,6 @@ export class ClienteComponent implements OnInit  {
   }
 
 
-  salvar() {
-    this.cadastroForm.markAllAsTouched();
-
-    if(this.pesquisar){
-      this.esconderPesquisa();
-    }
-    if(this.cadastroForm.valid){
-        this.clienteService.saveCliente(this.cadastroForm.value).subscribe({
-          next: () => {this.mostrarMensagem("Cliente cadastrado com sucesso")
-            this.esconderFormulario();
-            this.cadastroForm.reset();
-            this.carregarClientes();
-        },
-          error: ()=> this.mostrarMensagem("Ocorreu algum erro, verifique e tente novamente!")
-    });
-    }
-}
 
   deletar(){
     const confirmar = window.confirm('Tem certeza que deseja excluir este cliente?');
@@ -116,8 +127,6 @@ export class ClienteComponent implements OnInit  {
     }
     window.location.reload();
   }
-
-
 
 
   limparFormulario(){
@@ -176,9 +185,7 @@ export class ClienteComponent implements OnInit  {
   mostrarMensagem(mensagem: string) {
     this.snack.open(mensagem, 'OK',{ duration: 3000});
   } 
-
-
-  }
+}
 
 
 

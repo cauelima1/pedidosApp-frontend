@@ -18,7 +18,7 @@ export class ClienteService {
   component?: Component;
 
 saveCliente(cliente: Cliente) : Observable<Cliente> {
-      
+    
        const headers = this.captarHeaders();
         return this.http.post(this.apiUrl, cliente, { headers })
   }

@@ -1,5 +1,5 @@
 <div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
-    <h1 class="text-2xl font-semibold text-center mb-2">Clientes</h1>
+    <h1 class="text-2xl font-semibold text-center mb-2">Gestão de Clientes</h1>
         <hr class="border-l mb-2">
 
     
@@ -99,16 +99,9 @@
         </div>
     
         <label for="df">Diferencial de Alíquota - (INFORMAR EM DECIMAL COM .) :</label>
-        <input id="df" formControlName="df" placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
+        <input id="df" type="text" formControlName="df" placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
 
 
-        <div>
-            <label  for="isICMS">Tributa ICMS?</label>
-            <select class="border p-2 rounded w-full mb-2" formControlName="isICMS" name="isICMS">
-                <option [value]="true">Sim</option>
-                <option [value]="false">Não</option>
-            </select>
-        </div>
 
         <div class="flex justify-center mt-4">
             <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Enviar</button>
@@ -200,18 +193,9 @@
         </div>
     
         <label for="df">Diferencial de Alíquota - (INFORMAR EM DECIMAL):</label>
-        <input id="df" [(ngModel)]="clienteSelecionado.df" name="df" [disabled]="formDesabilitado"
+        <input id="df" [(ngModel)]="clienteSelecionado.df" type="text" name="df" [disabled]="formDesabilitado"
         placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
 
-        <div class="mt-2">
-            <label class="mt-2">Tributa ICMS:</label>
-            @if(clienteSelecionado.isICMS == true) {
-            <p class="font-bold">SIM</p>
-            } @else {
-            <p class="font-bold">NÃO</p>
-            }
-
-        </div>
 
         <hr class="mt-2">
 
@@ -227,7 +211,7 @@
         <div class="flex justify-center mt-4">
             <button type="submit"
             [disabled]="formDesabilitado"
-             class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Atualizar</button>
+             class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded" (click)="formDesabilitado=true">Atualizar</button>
         </div>
 
     </form>
