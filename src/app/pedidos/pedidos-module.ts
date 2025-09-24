@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PedidosRoutingModule } from './pedidos-routing-module';
 import { Pedido } from './pedido/pedido';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ClientesModule } from '../clientes/clientes.module';
+import { ClienteComponent } from '../clientes/cliente-component/cliente-component';
 
 
 @NgModule({
@@ -12,7 +12,6 @@ import { ClientesModule } from '../clientes/clientes.module';
     Pedido
   ],
   imports: [
-
     FormsModule,
     ReactiveFormsModule,
     CommonModule,

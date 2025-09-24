@@ -1,31 +1,182 @@
 <div class="p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
-   <h1 class="text-2xl font-semibold text-center mb-2">Gestão de Pedidos</h1>
+    <h1 class="text-2xl font-semibold text-center mb-2">Pedidos por cliente</h1>
 
     <div class="flex justify-center">
-        <div class="w-1/3 text-center  mt-5 mr-5">
+        <div class="w-1/2 text-center mt-5 mr-5">
             <label class="text-lg font-semibold mb-2">Cliente</label>
-                <select [(ngModel)]="selecionarCliente" name="selecionarCliente" class="border p-2 rounded w-full mb-2 text-lg" >
-                    <option>Selecine um cliente</option>
+            <select [(ngModel)]="selecionarCliente" name="selecionarCliente"
+                class="border p-2 rounded w-full mb-2 text-lg">
+
                 @for(cliente of clientes; track cliente.nome){
                 <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
                 }
-                </select>
-                    <button  class="text-lg w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800" (click)="mostrarTelaPedidos()">
-                        Selecionar Cliente</button>
+            </select>
+            <button (click)="carregarClienteSelecionado()"
+                class="text-lg w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800"
+                (click)="mostrarTelaCliente()">
+                Selecionar Cliente</button>
+
+
         </div>
 
         @if(selecionar){
-        <div class="w-1/3 text-center mt-5 mr-5">
-            <label class="text-lg font-semibold mb-2">Pedido</label>
-                <select name="selecionarCliente" class="border p-2 rounded w-full mb-2 text-lg" >
-                <option>Selecione um pedido</option>
-                </select>
+        <div class="w-1/2 text-center mt-5 mr-5">
+            <label class="text-lg mb-2">Informações do cliente:</label>
+            <hr>
+            <p class="text-left mb-1"><strong>Cliente: </strong>{{ clienteSelecionado?.nome }}</p>
+            <p class="text-left mb-1"><strong>CNPJ: </strong>{{ clienteSelecionado?.cnpj }}</p>
+            <p class="text-left mb-1"><strong>Endereço: </strong>{{ clienteSelecionado?.endereco }}, {{
+                clienteSelecionado?.municipio }}/ {{ clienteSelecionado?.uf}}</p>
+            <p class="text-left mb-1"><strong>Observações: </strong>{{ clienteSelecionado?.obs }}</p>
 
-                <button  class="text-lg w-full bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 mb-2">Consultar Pedido</button>
-                <button  class="text-lg w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800">Criar Novo Pedido</button>
+            <button (click)="mostrarTelaNovoPedido()"
+                class="mt-2 text-lg w-full bg-lime-600 text-white px-4 py-2 rounded hover:bg-lime-900">
+                Criar Pedido</button>
+            <hr>
         </div>
         }
+
     </div>
-   
+</div>
+
+@if(criarPedido){
+<div class="px-20 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
+    <h1 class="text-lg font-semibold text-center mb-2">Adicionar Pedido</h1>
+        <p class="text-lg text-center py-4">Informe todos os campos: </p>
+    <div class="mt-5flex flex-col justify-center text-center">
+        <form [formGroup]="pedidoForm" (ngSubmit)="salvarPedido()" >
+            <label class="border text-lg">IPI: </label>
+
+            <input id="ipi" formControlName="ipi" name="ipi"
+            class="border rounded mb-2 px-3 py-2 text-lg w-20" type="text" placeholder="Ex: 0.02" />
+                    @if(isCampoInvalido('ipi')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+
+
+            <label class="ml-5 px-3 border text-lg">ST: </label>
+            <input id="st" formControlName="st" name="st" 
+            class="border rounded mb-2 px-3 py-2 text-lg w-20" type="text" placeholder="Ex: 0.02" />
+                    @if(isCampoInvalido('st')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+
+
+            <label class="ml-5 px-3 border text-lg">MC: </label>
+            <input id="mc" formControlName="mc" name="mc"
+            class="border rounded mb-2 px-3 py-2 text-lg w-20" type="text" placeholder="Ex: 0.02" />
+                           @if(isCampoInvalido('mc')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+
+            <label class="ml-5 px-3 border text-lg">MC1: </label>
+            <input id="mc1" formControlName="mc1" name="mc1" 
+            class="border rounded mb-2 px-3 py-2 text-lg w-20" type="text" placeholder="Ex: 0.02" />
+               @if(isCampoInvalido('mc1')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+
+
+            <label class="ml-5 px-3 border text-lg">Frete: </label>
+            <input id="frete" formControlName="frete" name="frete"
+            class="border rounded mb-2 px-3 py-2 text-lg w-20" type="text" placeholder="Ex: 0.02" />
+               @if(isCampoInvalido('frete')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+
+
+            <label class="ml-5 px-3 border text-lg">ST VD: </label>
+            <input id="stvd" formControlName="stvd" name="stvd"
+            class="border rounded mb-2 px-3 py-2 text-lg w-20" type="text" placeholder="Ex: 0.02" />
+                        @if(isCampoInvalido('stvd')){ 
+            <span class="text-red-500 text-sm">
+                    Campo obrigatório
+            </span>
+            }
+
+
+            <div class="py-4">
+                <button type="submit" class="mt-2 text-lg w-40 bg-lime-600 text-white px-4 py-2 rounded hover:bg-lime-900">Salvar Pedido</button>
+            </div>
+        </form>
+    </div>
+
+ 
+
+          
+  
+
+
 
 </div>
+
+}
+
+
+@if(criarItem){
+<div class="px-20 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
+    <h1 class="font-semibold text-center mb-2">Adicionar item</h1>
+    <form>
+        <div class="pb-2">
+            <label>Nome do produto:</label>
+            <textarea name="nome" class="border p-2 rounded w-full mb-2"></textarea>
+        </div>
+
+        <div class="pb-2">
+            <label>Fabricante:</label>
+            <input name="fabricante " class="border p-2 rounded w-full mb-2" />
+        </div>
+
+        <div class="pb-2">
+            <label>Tipo de medida: </label>
+            <select>
+                <option>PC</option>
+                <option>M</option>
+            </select>
+        </div>
+
+        <div class="pb-2">
+            <label>Quantidade:</label>
+            <input class="border p-2 rounded w-full mb-2" />
+        </div>
+
+        <div class="pb-2">
+            <label>Observações: </label>
+            <textarea class="border p-2 rounded w-full mb-2"></textarea>
+        </div>
+
+
+        <div class="pb-2">
+            <label>Custo unitário:</label>
+            <input class="border p-2 rounded w-full mb-2" />
+        </div>
+
+        <div class="pb-2">
+            <label>Nome do produto:</label>
+            <input class="border p-2 rounded w-full mb-2" />
+        </div>
+
+        <div class="pb-2">
+            <label>Nome do produto:</label>
+            <input class="border p-2 rounded w-full mb-2" />
+        </div>
+
+        <div class="pb-2">
+            <label>Nome do produto:</label>
+            <input class="border p-2 rounded w-full mb-2" />
+        </div>
+
+
+    </form>
+</div>
+}

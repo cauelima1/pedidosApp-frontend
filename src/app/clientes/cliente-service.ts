@@ -1,5 +1,4 @@
 import { Component, Injectable, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cliente } from './cliente-component/clienteModel';
@@ -10,17 +9,14 @@ import { Cliente } from './cliente-component/clienteModel';
 })
 export class ClienteService {
   apiUrl: string = "http://localhost:8080/clientes"
-  snack: MatSnackBar = inject(MatSnackBar);
 
   constructor(private http: HttpClient) {
   }
 
-  component?: Component;
 
 saveCliente(cliente: Cliente) : Observable<Cliente> {
-    
-       const headers = this.captarHeaders();
-        return this.http.post(this.apiUrl, cliente, { headers })
+      const headers = this.captarHeaders();
+      return this.http.post(this.apiUrl, cliente, { headers })
   }
 
   confirmarAlteracao(cliente: Cliente) : Observable<Cliente> {
@@ -39,10 +35,6 @@ saveCliente(cliente: Cliente) : Observable<Cliente> {
     return this.http.delete<Cliente[]>(url ,{ headers })
   }
 
-
-  mostrarMensagem(mensagem: string) {
-    this.snack.open(mensagem, 'OK',{ duration: 3000});
-  } 
 
   captarHeaders(): HttpHeaders {
     const token = localStorage.getItem("jwtToken");

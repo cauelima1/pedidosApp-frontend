@@ -1,3 +1,6 @@
+import { PedidoModel } from '../../pedidos/pedido/pedidoModel';
+
+
 export class Cliente {
     nome?: string;
     cnpj?: number;
@@ -7,5 +10,6 @@ export class Cliente {
     uf?: string;
     df?: string;
     obs?: string;
+    pedidos?: PedidoModel[];
 
 }

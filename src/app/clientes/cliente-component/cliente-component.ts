@@ -49,7 +49,6 @@ export class ClienteComponent implements OnInit  {
       uf : new FormControl(''),
       df: new FormControl(''),
       obs: new FormControl('')
-
  });
  
 }
