@@ -1,9 +1,10 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { LoginService } from '../login-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {senhasIguaisValidator} from '../../login/verificarSenha'
+import { UtilServices } from '../../util-services';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class Login {
 
 
 
-constructor(private service: LoginService, private router: Router){
+constructor(private service: LoginService, private router: Router, private utilService: UtilServices){
 
       this.cadastroForm = new FormGroup({
       username: new FormControl('', Validators.required),
@@ -42,8 +43,8 @@ constructor(private service: LoginService, private router: Router){
   
     if(this.cadastroForm.valid){
       this.service.salvar(this.cadastroForm.value).subscribe({
-        next: () =>  this.mostrarMensagem('Cadastro com sucesso!'),
-        error: () =>this.mostrarMensagem('Erro: Usuário já cadastrado!')
+        next: () =>  this.utilService.mostrarMensagem('Cadastro com sucesso!'),
+        error: () =>this.utilService.mostrarMensagem('Erro: Usuário já cadastrado!')
       });
       } 
     }
@@ -55,9 +56,9 @@ constructor(private service: LoginService, private router: Router){
       this.service.logar(this.loginForm.value).subscribe({
           next: (token) => { 
             this.service.saveToken(token);
-            this.mostrarMensagem("Login efetuado com sucesso");
+            this.utilService.mostrarMensagem("Login efetuado com sucesso");
             this.router.navigate(['/home']);},
-          error: () => this.mostrarMensagem("Falha no Login")});
+          error: () => this.utilService.mostrarMensagem("Falha no Login")});
     } 
   }
 
@@ -74,13 +75,10 @@ constructor(private service: LoginService, private router: Router){
     return nomeCampo?.invalid && nomeCampo?.touched || false;
   }
 
-    isCampoValidoCadastro (campo: string) : boolean {
+  isCampoValidoCadastro (campo: string) : boolean {
     const nomeCampo = this.cadastroForm.get(campo);
     return nomeCampo?.invalid && nomeCampo?.touched || false;
   }
 
-    mostrarMensagem(mensagem: string) {
-    this.snack.open(mensagem, 'OK',{ duration: 3000});
-  } 
 
 }

@@ -5,6 +5,8 @@ import { FormGroup, Validators, FormControl} from'@angular/forms';
 import { PedidoModel } from './pedidoModel';
 import { PedidoService } from '../pedido-service';
 import { UtilServices } from '../../util-services';
+import { Item } from './itemModel';
+import { ItemService } from '../item-service';
 
 
 @Component({
@@ -17,40 +19,73 @@ export class Pedido implements OnInit {
   selecionar: boolean = false;
   criarPedido: boolean = false;
   criarItem: boolean = false;  
+  listarItems: boolean = false;
   clientes: Cliente [] = [];
+  items: Item [] = [];
   pedidoForm: FormGroup;
+  itemForm: FormGroup;
+  idPedido?: number;
 
     selecionarCliente?: Cliente;
     clienteSelecionado?: Cliente;
 
   constructor (private clientService: ClienteService, 
-    private service: PedidoService, private utilService: UtilServices){
+    private service: PedidoService, private utilService: UtilServices, private itemService: ItemService){
 
     this.pedidoForm = new FormGroup ({
         ipi: new FormControl('', Validators.required),
+        icms: new FormControl('', Validators.required),
         st: new FormControl('', Validators.required),
         mc: new FormControl('', Validators.required),
         mc1: new FormControl('', Validators.required),
         frete: new FormControl('', Validators.required),
-        stvd: new FormControl('', Validators.required)
+        stvd: new FormControl('', Validators.required),
+        condicaoFrete: new FormControl(''),
+        observacoes: new FormControl('')
+    }), 
+    this.itemForm = new FormGroup({
+      nome: new FormControl('', Validators.required),
+      fabricante: new FormControl,
+      tipo: new FormControl('', Validators.required),
+      obs: new FormControl,
+      quantidade: new FormControl('', Validators.required),
+      custo: new FormControl('', Validators.required)
     })
 
   }
 
     salvarPedido() {
       this.pedidoForm.markAllAsTouched();
+
       if(this.pedidoForm.valid){
       const novoPedido: PedidoModel = this.pedidoForm.value;
       novoPedido.idCliente = this.clienteSelecionado?.cnpj;
         this.service.savePedido(novoPedido).subscribe({
-          next: () => this.utilService.mostrarMensagem("Pedido cadastrado!"),
+          next: (idPedido: number) => { this.utilService.mostrarMensagem("Pedido cadastrado!" + idPedido), 
+            this.idPedido = idPedido;} ,
           error: () => this.utilService.mostrarMensagem("Ocorreu um erro ao cadastrar pedido!")
         })
-      console.log("Salvando novo pedido:", novoPedido);
-
+      this.pedidoForm.disable();
+      this.criarItem = true;
       }
   }
 
+  salvarItem() {
+    this.itemForm.markAllAsTouched();
+    if(this.itemForm.valid){
+      const novoItem: Item = this.itemForm.value;
+      console.log(novoItem)
+        novoItem.idPedido = this.idPedido;
+          this.itemService.saveItem(novoItem).subscribe({
+        next: (itemCadastrado: Item) =>  { this.utilService.mostrarMensagem("Item cadastrado!"),
+          console.log("Item cadastrado é:", itemCadastrado),
+          this.items.push(itemCadastrado), 
+          this.listarItems = true;
+        },
+        error: () => this.utilService.mostrarMensagem("Ocorreu um erro ao salvar item.")
+      })
+    }
+  }
 
   ngOnInit(): void {
    this.carregarClientes();
@@ -67,7 +102,6 @@ export class Pedido implements OnInit {
   carregarClienteSelecionado(){
        this.clienteSelecionado = this.clientes.find(c => c.nome === this.selecionarCliente?.nome)!;
   }  
-
 
 
     formatDecimal(value: string): number {
@@ -89,11 +123,18 @@ export class Pedido implements OnInit {
     this.criarItem = true;
   }
 
+  mostrarTelaItemsCadastrados (){
+    this.listarItems = true;
+  }
+
   isCampoInvalido(campo: string): boolean {
     const nomeCampo = this.pedidoForm.get(campo);
     return nomeCampo?.invalid && nomeCampo?.touched || false;
   }
 
-
+  isCampoInvalidoItemForm(campo: string): boolean {
+    const nomeCampo = this.itemForm.get(campo);
+    return nomeCampo?.invalid && nomeCampo?.touched || false;
+  }
 
 }

@@ -10,11 +10,12 @@ export class PedidoModel {
     observacoes?: string;
     statusPedido?: string;
     data?: string;
-    IPI?: number;
-    ST?: number;
-    mc?: number;
-    mc1?: number;
-    frete?: number;
-    vdot?: number;
-    stvd?: number;
+    ipi?: string;
+    st?: string;
+    mc?: string;
+    mc1?: string;
+    frete?: string;
+    vdot?: string;
+    stvd?: string;
+    icms?: string;
 }

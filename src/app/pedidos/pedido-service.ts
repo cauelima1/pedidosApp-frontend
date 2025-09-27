@@ -14,9 +14,9 @@ export class PedidoService {
 
   }
 
-  savePedido(pedido: PedidoModel): Observable<PedidoModel> {
+  savePedido(pedido: PedidoModel): Observable<number> {
     const headers = this.captarHeaders();
-    return this.http.post(this.apiUrl, pedido, { headers })
+    return this.http.post<number>(this.apiUrl, pedido, { headers })
   }
 
     captarHeaders(): HttpHeaders {

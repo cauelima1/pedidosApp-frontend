@@ -5,6 +5,7 @@ import { BrasilapiService } from '../../brasilapi-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cliente } from './clienteModel';
 import { ClienteService } from '../cliente-service';
+import { UtilServices } from '../../util-services';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class ClienteComponent implements OnInit  {
 };
  
     constructor (private brasilapiService: BrasilapiService,
-                 private clienteService: ClienteService) {
+                 private clienteService: ClienteService, private utilService: UtilServices) {
       
       this.cadastroForm = new FormGroup({
       nome: new FormControl('', Validators.required),
@@ -72,12 +73,12 @@ export class ClienteComponent implements OnInit  {
       this.cadastroForm.get('df')?.setValue(dfCorrigido);
       console.log("DF de " , this.clienteSelecionado.nome , "é " , this.clienteSelecionado.df);
         this.clienteService.saveCliente(this.cadastroForm.value).subscribe({
-          next: () => {this.mostrarMensagem("Cliente cadastrado com sucesso")
+          next: () => {this.utilService.mostrarMensagem("Cliente cadastrado com sucesso")
             this.esconderFormulario();
             this.cadastroForm.reset();
             this.carregarClientes();
         },
-          error: ()=> this.mostrarMensagem("Ocorreu algum erro, verifique e tente novamente!")
+          error: ()=> this.utilService.mostrarMensagem("Ocorreu algum erro, verifique e tente novamente!")
     });
     }
 }
@@ -92,7 +93,7 @@ export class ClienteComponent implements OnInit  {
       console.log("Cliente selecionado", this.clienteSelecionado);
       this.pesquisar = true;
     } else {
-      this.mostrarMensagem("Nenhum cliente selecionado");
+      this.utilService.mostrarMensagem("Nenhum cliente selecionado");
     }  
 
   }
@@ -105,11 +106,11 @@ export class ClienteComponent implements OnInit  {
       console.log("DF de " , this.clienteSelecionado.nome , "é " , this.clienteSelecionado.df);
      }
     this.clienteService.confirmarAlteracao(this.clienteSelecionado).subscribe({
-      next: () => { this.mostrarMensagem("Cliente alterado com sucesso!")
+      next: () => { this.utilService.mostrarMensagem("Cliente alterado com sucesso!")
         this.esconderPesquisa()
         this.carregarClientes()
       },
-      error: () => this.mostrarMensagem("Erro ao alterar cliente!")
+      error: () => this.utilService.mostrarMensagem("Erro ao alterar cliente!")
     });
   }
 
@@ -120,8 +121,8 @@ export class ClienteComponent implements OnInit  {
     const cnpj = this.clienteSelecionado.cnpj;
     if (confirmar && cnpj){
       this.clienteService.deletarCliente(cnpj).subscribe({
-        next: () => this.mostrarMensagem("Cliente deletado com sucesso!"),
-        error: () => this.mostrarMensagem("Falha ao deletar cliente!")
+        next: () => this.utilService.mostrarMensagem("Cliente deletado com sucesso!"),
+        error: () => this.utilService.mostrarMensagem("Falha ao deletar cliente!")
       })
     }
     window.location.reload();
@@ -181,9 +182,6 @@ export class ClienteComponent implements OnInit  {
   }
 
 
-  mostrarMensagem(mensagem: string) {
-    this.snack.open(mensagem, 'OK',{ duration: 3000});
-  } 
 }
 
 
