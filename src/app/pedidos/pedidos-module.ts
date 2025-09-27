@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PedidosRoutingModule } from './pedidos-routing-module';
 import { Pedido } from './pedido/pedido';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ClienteComponent } from '../clientes/cliente-component/cliente-component';
+import { NgxMaskDirective , NgxMaskPipe} from "ngx-mask";
 
 
 @NgModule({
@@ -15,7 +15,8 @@ import { ClienteComponent } from '../clientes/cliente-component/cliente-componen
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    PedidosRoutingModule
+    PedidosRoutingModule,NgxMaskDirective,
+    NgxMaskPipe
   ]
 })
 export class PedidosModule { }

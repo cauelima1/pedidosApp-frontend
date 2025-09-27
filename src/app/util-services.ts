@@ -12,4 +12,8 @@ export class UtilServices {
     mostrarMensagem(mensagem: string) {
     this.snack.open(mensagem, 'OK',{ duration: 3000});
   } 
+
+    formatDecimal(value: string): number {
+    return parseFloat(value.replace(',', '.'));
+  }
 }

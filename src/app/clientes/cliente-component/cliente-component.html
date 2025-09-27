@@ -1,86 +1,81 @@
 <div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
     <h1 class="text-2xl font-semibold text-center mb-2">Gestão de Clientes</h1>
-        <hr class="border-l mb-2">
+    <hr class="border-l mb-2">
 
-    
-       <select [(ngModel)]="selecionarCliente" name="selecionarCliente" class="border p-2 rounded w-full mb-2 text-lg" >
-            <option [ngValue]="null">Selecione um cliente</option>
-            @for(cliente of clientes; track cliente.nome){
-                <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
-            }
-       </select>
-  
 
-        <button (click)="consultar()" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-blue-800">
+    <select [(ngModel)]="selecionarCliente" name="selecionarCliente" class="border p-2 rounded w-full mb-2 text-lg">
+        <option [ngValue]="null">Selecione um cliente</option>
+        @for(cliente of clientes; track cliente.nome){
+        <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
+        }
+    </select>
+
+
+    <button (click)="consultar()" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-blue-800">
         <label class="text-lg">Consultar</label>
-        </button>
+    </button>
 
 
     <hr class="mt-4 mb-2">
     <span class="font-semibold flex justify-center"> OU </span>
-    
+
     <div class="flex justify-center mt-2">
-         <button name="cadastrarNovoCliente"(click)="mostrarFormulario()"  class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800">
-       <label class="text-lg">Cadastrar novo Cliente</label></button>
+        <button name="cadastrarNovoCliente" (click)="mostrarFormulario()"
+            class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800">
+            <label class="text-lg">Cadastrar novo Cliente</label></button>
     </div>
 
 
-    
+
     @if(cadastrar){
     <form [formGroup]="cadastroForm" (ngSubmit)="salvar()" class="mt-4">
         <div class="pb-2">
-            <label for="nome">Nome:</label>        
-            <input id="nome" formControlName="nome" placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" />
+            <label for="nome">Nome:</label>
+            <input id="nome" formControlName="nome" placeholder="Ex: Embraer S.A"
+                class="border p-2 rounded w-full mb-2" />
 
-        @if(isCampoInvalido('nome')){ 
+            @if(isCampoInvalido('nome')){
             <span class="text-red-500 text-sm">
-                    Campo obrigatório
+                Campo obrigatório
             </span>
             }
         </div>
-     
+
 
         <div class="pb-2">
             <label for="cnpj">CNPJ:</label>
-            <input id="cnpj" formControlName="cnpj"
-            mask="000.000.000/0000-00"
-            placeholder="Ex: 111.111.111/00001-10"
-            class="border p-2 rounded w-full mb-2" />
+            <input id="cnpj" formControlName="cnpj" mask="000.000.000/0000-00" placeholder="Ex: 111.111.111/00001-10"
+                class="border p-2 rounded w-full mb-2" />
 
-            
-            @if(isCampoInvalido('cnpj')){ 
+
+            @if(isCampoInvalido('cnpj')){
             <span class="text-red-500 text-sm">
-                    Campo obrigatório
+                Campo obrigatório
             </span>
             }
         </div>
 
         <div>
             <label for="obs">Observações:</label>
-            <textarea id="obs" formControlName="obs" 
-            
-            placeHolder="Ex: Contatos da empresa, observaçoes pertinentes..."
-            class="border p-2 rounded w-full mb-2" ></textarea>
+            <textarea id="obs" formControlName="obs" placeHolder="Ex: Contatos da empresa, observaçoes pertinentes..."
+                class="border p-2 rounded w-full mb-2"></textarea>
         </div>
 
 
         <div>
             <label for="cep">CEP:</label>
-            <input id="cep" type="text" formControlName="cep" 
-            mask="00000-000"
-            placeHolder="Ex: 12345-670"
-            class="border p-2 rounded w-full mb-2" />
+            <input id="cep" type="text" formControlName="cep" mask="00000-000" placeHolder="Ex: 12345-670"
+                class="border p-2 rounded w-full mb-2" />
         </div>
 
         <div>
             <label for="endereco">Enredeço:</label>
-            <input id="endereco" 
-            placeholder="Ex: Avenida Morumbí, 400"
-            formControlName="endereco" class="border p-2 rounded w-full mb-2" />
+            <input id="endereco" placeholder="Ex: Avenida Morumbí, 400" formControlName="endereco"
+                class="border p-2 rounded w-full mb-2" />
         </div>
 
         <div>
-            <label  for="uf">Estado:</label>
+            <label for="uf">Estado:</label>
             <select class="border p-2 rounded w-full mb-2" (change)="carregarMunicipios($event)" formControlName="uf">
                 @for(estado of estados; track estado.sigla){
                 <option [value]="estado.sigla">{{ estado.nome }}</option>
@@ -88,7 +83,7 @@
             </select>
         </div>
 
-           
+
         <div>
             <label for="municipio">Município:</label>
             <select class="border p-2 rounded w-full mb-2" formControlName="municipio">
@@ -97,82 +92,75 @@
                 }
             </select>
         </div>
-    
+
         <label for="df">Diferencial de Alíquota - (INFORMAR EM DECIMAL COM .) :</label>
         <input id="df" type="text" formControlName="df" placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
 
 
 
         <div class="flex justify-center mt-4">
-            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Enviar</button>
+            <button type="submit"
+                class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">Enviar</button>
         </div>
     </form>
     }
-</div>  
+</div>
 
 
 <div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
 
- @if(pesquisar){
+    @if(pesquisar){
     <form #ngform="ngForm" (ngSubmit)="alterarCliente()" class="mt-4">
         <div class="pb-2">
-            <label for="nome">Nome:</label>        
+            <label for="nome">Nome:</label>
             <input id="nome" [(ngModel)]="clienteSelecionado.nome" name="nome" [disabled]="formDesabilitado"
-            placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" required/>
+                placeholder="Ex: Embraer S.A" class="border p-2 rounded w-full mb-2" required />
 
-        @if(isCampoInvalido('nome')){ 
+            @if(isCampoInvalido('nome')){
             <span class="text-red-500 text-sm">
-                    Campo obrigatório
+                Campo obrigatório
             </span>
             }
         </div>
-     
+
 
         <div class="pb-2">
             <label for="cnpj">CNPJ:</label>
-            <input id="cnpj" [(ngModel)]="clienteSelecionado.cnpj" readonly
-            name="cnpj"
-            mask="000.000.000/0000-00"
-            placeholder="Ex: 111.111.111/00001-10"
-            class="border p-2 rounded w-full mb-2" />
+            <input id="cnpj" [(ngModel)]="clienteSelecionado.cnpj" readonly name="cnpj" mask="000.000.000/0000-00"
+                placeholder="Ex: 111.111.111/00001-10" class="border p-2 rounded w-full mb-2" />
 
-            
-            @if(isCampoInvalido('cnpj')){ 
+
+            @if(isCampoInvalido('cnpj')){
             <span class="text-red-500 text-sm">
-                    Campo obrigatório
+                Campo obrigatório
             </span>
             }
         </div>
 
         <div>
             <label for="obs">Observações:</label>
-            <textarea id="obs" [(ngModel)]="clienteSelecionado.obs" [disabled]="formDesabilitado"
-            name="obs"
-            placeHolder="Ex: Contatos da empresa, observaçoes pertinentes..."
-            class="border p-2 rounded w-full mb-2" ></textarea>
+            <textarea id="obs" [(ngModel)]="clienteSelecionado.obs" [disabled]="formDesabilitado" name="obs"
+                placeHolder="Ex: Contatos da empresa, observaçoes pertinentes..."
+                class="border p-2 rounded w-full mb-2"></textarea>
         </div>
 
 
         <div>
             <label for="cep">CEP:</label>
-            <input id="cep" type="text" [(ngModel)]="clienteSelecionado.cep" [disabled]="formDesabilitado"
-            name="cep"
-            mask="00000-000"
-            placeHolder="Ex: 12345-670"
-            class="border p-2 rounded w-full mb-2" />
+            <input id="cep" type="text" [(ngModel)]="clienteSelecionado.cep" [disabled]="formDesabilitado" name="cep"
+                mask="00000-000" placeHolder="Ex: 12345-670" class="border p-2 rounded w-full mb-2" />
         </div>
 
         <div>
             <label for="endereco">Enredeço:</label>
-            <input id="endereco" 
-            placeholder="Ex: Avenida Morumbí, 400" 
-            [disabled]="formDesabilitado" [(ngModel)]="clienteSelecionado.endereco" name="endereco" class="border p-2 rounded w-full mb-2" />
+            <input id="endereco" placeholder="Ex: Avenida Morumbí, 400" [disabled]="formDesabilitado"
+                [(ngModel)]="clienteSelecionado.endereco" name="endereco" class="border p-2 rounded w-full mb-2" />
         </div>
 
         <div>
-            <label  for="uf">Estado:</label>
-            <select class="border p-2 rounded w-full mb-2" 
-            [disabled]="formDesabilitado" [(ngModel)]="clienteSelecionado.uf" name="uf" (change)="carregarMunicipios($event)">
+            <label for="uf">Estado:</label>
+            <select class="border p-2 rounded w-full mb-2" [disabled]="formDesabilitado"
+                [(ngModel)]="clienteSelecionado.uf" name="uf" (change)="carregarMunicipios($event)">
                 <option [value]="clienteSelecionado.uf">{{clienteSelecionado.uf}}</option>
                 @for(estado of estados; track estado.sigla){
                 <option [value]="estado.sigla">{{ estado.nome }}</option>
@@ -180,40 +168,41 @@
             </select>
         </div>
 
-           
+
         <div>
             <label for="municipio">Município:</label>
-            <select class="border p-2 rounded w-full mb-2" 
-            [disabled]="formDesabilitado" [(ngModel)]="clienteSelecionado.municipio" name="municipio">
+            <select class="border p-2 rounded w-full mb-2" [disabled]="formDesabilitado"
+                [(ngModel)]="clienteSelecionado.municipio" name="municipio">
                 <option [value]="clienteSelecionado.municipio">{{clienteSelecionado.municipio}}</option>
                 @for(municipio of municipios; track municipio.nome){
                 <option [value]="municipio.nome">{{ municipio.nome }}</option>
                 }
             </select>
         </div>
-    
+
         <label for="df">Diferencial de Alíquota - (INFORMAR EM DECIMAL):</label>
         <input id="df" [(ngModel)]="clienteSelecionado.df" type="text" name="df" [disabled]="formDesabilitado"
-        placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
+            placeholder="Ex: 0.06" class="border p-2 rounded w-full mb-2" />
 
 
         <hr class="mt-2">
 
-       <div class="flex flex-row justify-center mt-4">
-        <button type="button" (click)="formDesabilitado = false" class="w-full bg-blue-500 text-white px-4 py-2 rounded mb-4">
-            Editar</button>
+        <div class="flex flex-row justify-center mt-4 gap-6">
+            <button type="button" (click)="formDesabilitado = false"
+                class="w-1/2 bg-blue-500 text-white px-4 py-2 rounded mb-4 hover:bg-blue-800">
+                Editar</button>
 
-            <button type="button" (click)="deletar()" class=" w-full bg-red-500 text-white px-4 py-2 rounded mb-4">
-            Deletar</button>
-       </div>
+            <button type="button" (click)="deletar()" class="w-1/2 bg-red-500 text-white px-4 py-2 rounded mb-4 hover:bg-red-800">
+                Deletar</button>
+        </div>
 
-            
-        <div class="flex justify-center mt-4">
-            <button type="submit"
-            [disabled]="formDesabilitado"
-             class="w-full bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded" (click)="formDesabilitado=true">Atualizar</button>
+
+        <div class="flex justify-center">
+            <button type="submit" [disabled]="formDesabilitado"
+                class="w-1/2 bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded"
+                (click)="formDesabilitado=true">Atualizar</button>
         </div>
 
     </form>
-}
+    }
 </div>

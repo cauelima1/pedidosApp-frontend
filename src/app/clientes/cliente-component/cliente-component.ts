@@ -68,10 +68,8 @@ export class ClienteComponent implements OnInit  {
       this.esconderPesquisa();
     }
     if(this.cadastroForm.valid){
-      const dfOriginal = this.cadastroForm.get('df')?.value ?? '';
-      const dfCorrigido = dfOriginal.replace(/,/g, '.');
-      this.cadastroForm.get('df')?.setValue(dfCorrigido);
-      console.log("DF de " , this.clienteSelecionado.nome , "é " , this.clienteSelecionado.df);
+    
+
         this.clienteService.saveCliente(this.cadastroForm.value).subscribe({
           next: () => {this.utilService.mostrarMensagem("Cliente cadastrado com sucesso")
             this.esconderFormulario();

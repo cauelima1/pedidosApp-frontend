@@ -8,9 +8,9 @@ import { PedidoModel } from './pedido/pedidoModel';
   providedIn: 'root'
 })
 export class PedidoService {
-  apiUrl: string ="http://localhost:8080/pedidos"
+  apiUrl: string = "http://localhost:8080/pedidos"
 
-  constructor(private http: HttpClient){
+  constructor(private http: HttpClient) {
 
   }
 
@@ -19,7 +19,14 @@ export class PedidoService {
     return this.http.post<number>(this.apiUrl, pedido, { headers })
   }
 
-    captarHeaders(): HttpHeaders {
+  mostrarPedidos(cnpj: number): Observable<PedidoModel[]> {
+    const headers = this.captarHeaders();
+    const url = `${this.apiUrl}/${cnpj}`;
+    return this.http.get<PedidoModel[]>(url , { headers })
+  }
+
+
+  captarHeaders(): HttpHeaders {
     const token = localStorage.getItem("jwtToken");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return headers;

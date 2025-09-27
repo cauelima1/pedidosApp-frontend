@@ -1,4 +1,5 @@
 export class Item {
+    id?: number;
     idPedido?: number;
     fabricante?: string;
     nome?: string;

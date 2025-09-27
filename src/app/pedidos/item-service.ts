@@ -22,4 +22,13 @@ export class ItemService {
     return this.http.post(this.apiUrl, item, { headers })
   }
 
+  
+deleteItem(id: number): Observable<Item> {
+  console.log("variavel id", id);
+  const headers = this.pedidoService.captarHeaders();
+  const url = `${this.apiUrl}/${id}`; // monta a URL com o ID
+  return this.http.delete<Item>(url, { headers }); // usa a URL correta
+}
+
+
 }
