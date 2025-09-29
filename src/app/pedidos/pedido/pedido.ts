@@ -7,6 +7,9 @@ import { PedidoService } from '../pedido-service';
 import { UtilServices } from '../../util-services';
 import { Item } from './itemModel';
 import { ItemService } from '../item-service';
+import { Router } from '@angular/router';
+
+
 
 
 @Component({
@@ -17,6 +20,7 @@ import { ItemService } from '../item-service';
 })
 
 export class Pedido implements OnInit {
+  isDisabled = false;
   verPedidos: boolean = false;
   selecionar: boolean = false;
   criarPedido: boolean = false;
@@ -29,11 +33,12 @@ export class Pedido implements OnInit {
   itemForm: FormGroup;
   idPedido?: number;
 
+
   selecionarCliente?: Cliente;
   clienteSelecionado?: Cliente;
 
   constructor(private clientService: ClienteService,
-    private service: PedidoService, private utilService: UtilServices, private itemService: ItemService) {
+    private service: PedidoService, private utilService: UtilServices, private itemService: ItemService, private router: Router) {
 
     this.pedidoForm = new FormGroup({
       ipi: new FormControl('', Validators.required),
@@ -72,6 +77,8 @@ export class Pedido implements OnInit {
       })
       this.pedidoForm.disable();
       this.criarItem = true;
+      this.isDisabled = true;
+
     }
   }
 
@@ -84,11 +91,50 @@ export class Pedido implements OnInit {
       this.itemService.saveItem(novoItem).subscribe({
         next: (itemCadastrado: Item) => {
           this.utilService.mostrarMensagem("Item cadastrado!"),
-            console.log("Item cadastrado é:", itemCadastrado),
+            console.log("Item cadastrado é: ", itemCadastrado),
             this.items.push(itemCadastrado),
             this.listarItems = true;
         },
         error: () => this.utilService.mostrarMensagem("Ocorreu um erro ao salvar item.")
+      })
+    }
+  }
+
+verPedido(pedido: PedidoModel) {
+  console.log("Visualizando pedido:" , pedido);
+    if (this.clienteSelecionado) {
+          this.router.navigate(['home/visualizar'], {
+          state: {
+            pedido: pedido,
+            cliente: this.clienteSelecionado
+          }});
+  } else {
+    console.log("Deu errado carregar a tela de Visualizaçao;")
+  }
+}
+
+editarPedido(pedido: PedidoModel){
+
+}
+
+deletarPedido(pedido:PedidoModel){
+  
+}
+
+
+  finalizarPedido() {
+    if (this.idPedido) {
+      this.service.finalizarPedido(this.idPedido).subscribe({
+        next: (pedidoFinalizado: PedidoModel) => {
+          this.utilService.mostrarMensagem("Pedido Finalizado!");
+          this.router.navigate(['home/visualizar'], {
+            state: {
+              pedido: pedidoFinalizado,
+              cliente: this.clienteSelecionado
+            },
+          });
+        },
+        error: () => this.utilService.mostrarMensagem("Ocorreu um erro ao gerar o pedido!")
       })
     }
   }
@@ -116,7 +162,7 @@ export class Pedido implements OnInit {
 
   carregarClientes(): void {
     this.clientService.listaClientes().subscribe({
-      next: (listaClientes) => { 
+      next: (listaClientes) => {
         this.clientes = listaClientes;
       },
       error: (err) => console.error("Erro ao carregar clientes ", err)
@@ -133,23 +179,23 @@ export class Pedido implements OnInit {
   }
 
 
-mostrarTelaPedidos(){
-  this.verPedidos=true;
-  this.criarPedido=false;
-  this.criarItem=false;
-  const cnpj = this.clienteSelecionado?.cnpj;
-  console.log(cnpj)
-  if(cnpj){
-    this.service.mostrarPedidos(cnpj).subscribe({
-      next: (listPedidos: PedidoModel[]) => {
-        this.pedidos = listPedidos;
-        this.utilService.mostrarMensagem("Mostrando lista de Pedidos para cliente");
-      }
-      
-    })
-  }
+  mostrarTelaPedidos() {
+    this.verPedidos = true;
+    this.criarPedido = false;
+    this.criarItem = false;
+    const cnpj = this.clienteSelecionado?.cnpj;
+    console.log(cnpj)
+    if (cnpj) {
+      this.service.mostrarPedidos(cnpj).subscribe({
+        next: (listPedidos: PedidoModel[]) => {
+          this.pedidos = listPedidos;
+          this.utilService.mostrarMensagem("Mostrando lista de Pedidos para cliente");
+        }
 
-}
+      })
+    }
+
+  }
 
   mostrarTelaCliente() {
     if (this.selecionarCliente) {
@@ -158,7 +204,7 @@ mostrarTelaPedidos(){
   }
 
   mostrarTelaNovoPedido() {
-    this.verPedidos=false;
+    this.verPedidos = false;
     this.criarPedido = true;
   }
 
@@ -178,6 +224,10 @@ mostrarTelaPedidos(){
   isCampoInvalidoItemForm(campo: string): boolean {
     const nomeCampo = this.itemForm.get(campo);
     return nomeCampo?.invalid && nomeCampo?.touched || false;
+  }
+
+  limparFormulario() {
+    this.itemForm.reset();
   }
 
   recarregarPagina() {

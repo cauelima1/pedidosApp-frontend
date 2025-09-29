@@ -8,7 +8,6 @@ export class Cliente {
     endereco?: string;
     municipio?: string;
     uf?: string;
-    df?: string;
     obs?: string;
     pedidos?: PedidoModel[];
 

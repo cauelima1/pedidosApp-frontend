@@ -1,0 +1,67 @@
+<div class="overflow-x-auto p-6">
+  <div class="bg-white p-6 rounded-lg shadow-md mb-6 max-w-4xl mx-auto">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Informações do Cliente</h2>
+    
+    <div class="grid grid-cols-2 gap-x-8 gap-y-4 text-gray-700">
+      <p><span class="font-medium">Nome:</span> {{ cliente?.nome }}</p>
+      <p><span class="font-medium">CNPJ:</span> {{ cliente?.cnpj }}</p>
+      <p><span class="font-medium">UF:</span> {{ cliente?.uf }}</p>
+      <p><span class="font-medium">Município:</span> {{ cliente?.municipio }}</p>
+      <p class="col-span-2"><span class="font-medium">Endereço:</span> {{ cliente?.endereco }}</p>
+      <p class="col-span-2"><span class="font-medium">Observações:</span> {{ cliente?.obs }}</p>
+    </div>
+  </div>
+
+
+
+        <table class="min-w-full border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                    <th class="px-4 py-2 text-left">ID</th>
+                    <th class="px-4 py-2 text-left">Nome</th>
+                    <th class="px-4 py-2 text-left">Qtd</th>
+                    <th class="px-4 py-2 text-left">Custo</th>
+                    <th class="px-4 py-2 text-left">IPI</th>
+                    <th class="px-4 py-2 text-left">ST</th>
+                    <th class="px-4 py-2 text-left">Unitário</th>
+                    <th class="px-4 py-2 text-left">Total</th>
+                    <th class="px-4 py-2 text-left">MC</th>
+                    <th class="px-4 py-2 text-left">MC1</th>
+                    <th class="px-4 py-2 text-left">Frete</th>
+                    <th class="px-4 py-2 text-left">V. Total</th>
+                    <th class="px-4 py-2 text-left">STVD</th>
+                    <th class="px-4 py-2 text-left">PRCF</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of items; track item.id) {
+                <tr class="border-t">
+                    <td class="px-4 py-2">{{ item.id }}</td>
+                    <td class="px-4 py-2">{{ item.nome }}</td>
+                    <td class="px-4 py-2">{{ item.quantidade }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.custo | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.ipi | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.st | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.custoUnitario | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.custoTotal | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.mc | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.mc1 | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.frete | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.vtot | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.stvd | currency:'BRL' }}</td>
+                    <td class="px-4 py-2 text-green-600">{{ item.prcf | currency:'BRL' }}</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <tfoot class="bg-gray-100">
+  <tr>
+    <td colspan="13" class="px-4 py-2 text-right font-semibold text-gray-800">Valor Total do Pedido:</td>
+    <td colspan="1" class="px-4 py-2 text-green-700 font-bold">
+      {{ pedido?.valorTotal | currency:'BRL' }}
+    </td>
+  </tr>
+</tfoot>
+
+        <button (click)="gerarPDF()" class="mt-2 text-lg w-60 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-900">Gerar PDF</button>
+      </div>

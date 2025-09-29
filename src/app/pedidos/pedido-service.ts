@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PedidoModel } from './pedido/pedidoModel';
+import { Cliente } from '../clientes/cliente-component/clienteModel';
 
 
 @Injectable({
@@ -25,6 +26,17 @@ export class PedidoService {
     return this.http.get<PedidoModel[]>(url , { headers })
   }
 
+  finalizarPedido(id: number): Observable<PedidoModel> {
+    const headers = this.captarHeaders();
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.post<PedidoModel>(url, {},{headers});
+  }
+
+  carregarCliente(cnpj: number): Observable<Cliente> {
+    const headers = this.captarHeaders();
+        const url = `${this.apiUrl}/${cnpj}`;
+        return this.http.get<Cliente>(url, { headers })
+  }
 
   captarHeaders(): HttpHeaders {
     const token = localStorage.getItem("jwtToken");

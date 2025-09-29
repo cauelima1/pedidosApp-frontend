@@ -5,20 +5,28 @@ import { provideHttpClient, withFetch } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './authInterceptor'; 
+import { AuthInterceptor } from './authInterceptor';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
+
 
 
 @NgModule({
   declarations: [
-    App
+    App,
+
   ],
-  imports: [
+  imports: [ 
     NgxMaskDirective,
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [    
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+ providers: [
+  { provide: LOCALE_ID, useValue: 'pt-BR' },
+  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withFetch()),
     provideNgxMask()

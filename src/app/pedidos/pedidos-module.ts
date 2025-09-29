@@ -5,18 +5,23 @@ import { PedidosRoutingModule } from './pedidos-routing-module';
 import { Pedido } from './pedido/pedido';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective , NgxMaskPipe} from "ngx-mask";
+import { MatButton, MatIconButton } from '@angular/material/button'
+import {MatIconModule } from '@angular/material/icon'
 
 
 @NgModule({
   declarations: [
-    Pedido
+    Pedido,
+
   ],
-  imports: [
+  imports: [MatIconModule,
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    PedidosRoutingModule,NgxMaskDirective,
-    NgxMaskPipe
-  ]
+    PedidosRoutingModule, NgxMaskDirective,
+    NgxMaskPipe,
+    MatButton,
+    MatIconButton
+]
 })
 export class PedidosModule { }

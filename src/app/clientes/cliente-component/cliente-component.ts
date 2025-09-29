@@ -26,7 +26,6 @@ export class ClienteComponent implements OnInit  {
   formDesabilitado: boolean = true;
 
 
-
   clienteSelecionado: Cliente = {
   nome: '',
   cnpj: 0,
@@ -34,8 +33,7 @@ export class ClienteComponent implements OnInit  {
   cep: '',
   endereco: '',
   municipio: '',
-  uf: '',
-  df: ''
+  uf: ''
 };
  
     constructor (private brasilapiService: BrasilapiService,
@@ -48,12 +46,10 @@ export class ClienteComponent implements OnInit  {
       endereco: new FormControl(''),
       municipio: new FormControl(''),
       uf : new FormControl(''),
-      df: new FormControl(''),
       obs: new FormControl('')
  });
- 
-}
 
+}
 
   ngOnInit(): void {
     this.carregarUfs();
@@ -68,8 +64,6 @@ export class ClienteComponent implements OnInit  {
       this.esconderPesquisa();
     }
     if(this.cadastroForm.valid){
-    
-
         this.clienteService.saveCliente(this.cadastroForm.value).subscribe({
           next: () => {this.utilService.mostrarMensagem("Cliente cadastrado com sucesso")
             this.esconderFormulario();
@@ -97,13 +91,7 @@ export class ClienteComponent implements OnInit  {
   }
 
   alterarCliente(){
-     const dfOriginal = this.clienteSelecionado.df;
-     if(dfOriginal){
-      const dfCorrigido = dfOriginal.replace(/,/g, '.');
-      this.clienteSelecionado.df = dfCorrigido;
-      console.log("DF de " , this.clienteSelecionado.nome , "é " , this.clienteSelecionado.df);
-     }
-    this.clienteService.confirmarAlteracao(this.clienteSelecionado).subscribe({
+     this.clienteService.confirmarAlteracao(this.clienteSelecionado).subscribe({
       next: () => { this.utilService.mostrarMensagem("Cliente alterado com sucesso!")
         this.esconderPesquisa()
         this.carregarClientes()

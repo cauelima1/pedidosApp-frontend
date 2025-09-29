@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TemplateComponent } from './template-component/template-component';
-import { ClientesModule } from '../clientes/clientes.module';
-import { Pedido } from '../pedidos/pedido/pedido';
+
 
 
 const routes: Routes = [
@@ -17,6 +16,14 @@ const routes: Routes = [
       {
         path: 'pedidos',
         loadChildren: () => import('../pedidos/pedidos-module').then(m => m.PedidosModule)
+      },
+      {
+        path: 'visualizar',
+        loadChildren: () => import('../visualizar/visualizar-module').then(m => m.VisualizarModule)
+      },
+      {
+        path: 'acompanhar',
+        loadChildren: () => import('../acompanhar/acompanhar-module').then(m => m.AcompanharModule)
       }
     ]
   }
