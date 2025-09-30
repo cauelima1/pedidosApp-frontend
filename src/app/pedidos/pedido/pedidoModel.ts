@@ -5,7 +5,6 @@ export class PedidoModel {
     idCliente?: number;
     items?: Item[] = [];
     valorTotal?: number;
-    validade?: string;
     condicaoFrete?: string;
     observacoes?: string;
     statusPedido?: string;

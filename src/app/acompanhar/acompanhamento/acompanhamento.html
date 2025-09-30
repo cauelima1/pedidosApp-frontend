@@ -4,14 +4,14 @@
         @if(!selecionar){
         <div class="flex-col text-center">
             <label class="text-lg font-semibold mb-2">Cliente</label>
-            <select [(ngModel)]="selecionarCliente" name="selecionarCliente"  (change)="carregarPedidos(selecionarCliente?.cnpj || 0)"
-                class="border p-2 rounded w-full mb-2 text-lg">
+            <select [(ngModel)]="selecionarCliente" name="selecionarCliente"
+                (change)="carregarPedidos(selecionarCliente?.cnpj || 0)" class="border p-2 rounded w-full mb-2 text-lg">
 
                 @for(cliente of clientes; track cliente.nome){
                 <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
                 }
             </select>
-   
+
         </div>
         }
     </div>
@@ -31,12 +31,189 @@
     </div>
 
     @if(selecionarPedido){
-        <div class="flex flex-col text-center px-4 py-4">
-            <a class="w-30 bg-gray-500 text-white px-4 py-2 rounded mb-4 hover:bg-gray-800">Editar</a>
-            <a class="w-30 bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-gree-800">Atualizar Status</a>
-        </div>
+    <div class="flex flex-col text-center px-4 py-4">
+        <a type="button" class="w-30 bg-gray-500 text-white px-4 py-2 rounded mb-4 hover:bg-gray-800"
+            (click)="editar()">Editar</a>
+        <a class="w-30 bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-gree-800">Atualizar Status</a>
+    </div>
     }
 
-   
-
 </div>
+
+@if(editarPedido){
+<div class="flex flex-col p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
+    <p class="text-center text-lg mb-2">Orçamento - {{ pedidoSelecionado.id }}</p>
+    <h1 class="text-2xl font-semibold text-center py-4">Editar</h1>
+
+    <div class="py-4">
+        <form #ngform="ngForm" (ngSubmit)="salvarEdicao()">
+            <div class="grid grid-cols-3 gap-x-10 gap-y-6 justify-center text-center">
+
+                <!-- IPI -->
+                <div>
+                    <label class="border text-lg">IPI: </label>
+                    <input id="ipi" [(ngModel)]="pedidoSelecionado.ipi" name="ipi" [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                    <label class="font-semibold text-lg"> %</label>
+                    @if(isCampoInvalido('ipi')){
+                    <span class="text-red-500 text-sm">Campo obrigatório</span>
+                    }
+                </div>
+
+                <!-- ST -->
+                <div>
+                    <label class="border text-lg">ST: </label>
+                    <input id="st" [(ngModel)]="pedidoSelecionado.st" name="st" [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                    <label class="font-semibold text-lg"> %</label>
+                    @if(isCampoInvalido('st')){
+                    <span class="text-red-500 text-sm">Campo obrigatório</span>
+                    }
+                </div>
+
+
+                <!-- MC -->
+                <div>
+                    <label class="border text-lg">MC: </label>
+                    <input id="mc" [(ngModel)]="pedidoSelecionado.mc" name="mc" [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                    <label class="font-semibold text-lg"> %</label>
+                    @if(isCampoInvalido('mc')){
+                    <span class="text-red-500 text-sm">Campo obrigatório</span>
+                    }
+                </div>
+
+                <!-- MC1 -->
+                <div>
+                    <label class="border text-lg">MC1: </label>
+                    <input id="mc1" [(ngModel)]="pedidoSelecionado.mc1" name="mc1" [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                    <label class="font-semibold text-lg"> %</label>
+                    @if(isCampoInvalido('mc1')){
+                    <span class="text-red-500 text-sm">Campo obrigatório</span>
+                    }
+                </div>
+
+                <!-- Frete -->
+                <div>
+                    <label class="border text-lg">Frete: </label>
+                    <input id="frete" [(ngModel)]="pedidoSelecionado.frete" name="frete"
+                        [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                    <label class="font-semibold text-lg"> %</label>
+                    @if(isCampoInvalido('frete')){
+                    <span class="text-red-500 text-sm">Campo obrigatório</span>
+                    }
+                </div>
+
+                <!-- stvd -->
+                <div>
+                    <label class="border text-lg">STVD: </label>
+                    <input id="stvd" [(ngModel)]="pedidoSelecionado.stvd" name="stvd"
+                        [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                    <label class="font-semibold text-lg"> %</label>
+                    @if(isCampoInvalido('stvd')){
+                    <span class="text-red-500 text-sm">Campo obrigatório</span>
+                    }
+                </div>
+
+            </div>
+
+            <div class="py-2 justify-center text-center mb-10">
+                <!-- Observacoes -->
+                <div class="px-2">
+                    <label class="border text-lg">Observações: </label>
+                    <textarea id="observacoes" [(ngModel)]="pedidoSelecionado.observacoes" name="observacoes"
+                        [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border border-gray-300 rounded mb-2 px-3 py-2 text-lg w-full" type="text">
+            </textarea>
+                </div>
+
+                <!-- Condicoes Frete -->
+                <div class="px-2">
+                    <label class="border text-lg">Condições de Frete: </label>
+                    <textarea id="condicaoFrete" [(ngModel)]="pedidoSelecionado.condicaoFrete" name="condicaoFrete"
+                        [disabled]="!editarPedidoHabilitado"
+                        class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-full" type="text">
+            </textarea>
+                </div>
+            </div>
+            @if(editarPedidoHabilitado) {
+            <button type="submit">Salvar</button>
+            }
+
+
+        </form>
+        @if(!editarPedidoHabilitado){
+        <button (click)="habilitarEdicao()">Editar Pedido</button>
+        }
+        <div class="py-2">
+            <h1 class="text-2xl font-semibold text-center py-4">Produtos:</h1>
+
+            @if (listarItems) {
+            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 bg-gray-200 p-4">
+                <h1 class="text-2xl font-semibold text-center mb-2">Produtos:</h1>
+                <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
+                    <thead class="bg-gray-100 text-gray-700 uppercase tracking-wider">
+                        <tr>
+                            <th class="px-4 py-2">#</th>
+                            <th class="px-4 py-2">Nome</th>
+                            <th class="px-4 py-2">Quantidade</th>
+                            <th class="px-4 py-2">Custo</th>
+                            <th class="px-4 py-2">IPI</th>
+                            <th class="px-4 py-2">ST</th>
+                            <th class="px-4 py-2">C. Unit</th>
+                            <th class="px-4 py-2">C. Total</th>
+                            <th class="px-4 py-2">MC</th>
+                            <th class="px-4 py-2">MC1</th>
+                            <th class="px-4 py-2">Frete</th>
+                            <th class="px-4 py-2">V.TOT</th>
+                            <th class="px-4 py-2">ST VD</th>
+                            <th class="px-4 py-2">PRÇ F</th>
+                            <th class="px-4 py-2">V.TOT F</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @for (item of items; track item.id) {
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-2 font-medium text-gray-800">{{ item.id }}</td>
+                            <td class="px-4 py-2 font-medium text-gray-800">{{ item.nome }}</td>
+                            <td class="px-4 py-2 text-gray-600">{{ item.quantidade }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.custo | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.ipi | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.st | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.custoUnitario | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.custoTotal | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.mc | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.mc1 | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.frete | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.vtot | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.stvd | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.prcf | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-green-600">{{ item.vtot | currency:'BRL' }}</td>
+                            <td class="px-4 py-2 text-center">
+                                @if(item.id != null){
+                                <button
+                                    class="text-red-600 hover:text-red-800 font-bold px-2 py-1 rounded transition-colors duration-200"
+                                    (click)="deletarItem(item.id)" title="Remover item">
+                                    ✕
+                                </button>
+                                }
+
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            }
+
+            
+
+        </div>
+    </div>
+</div>
+}
