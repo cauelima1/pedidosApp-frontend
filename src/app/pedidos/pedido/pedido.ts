@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 })
 
 export class Pedido implements OnInit {
+  isEditar = false;
   isDisabled = false;
   verPedidos: boolean = false;
   selecionar: boolean = false;
@@ -113,12 +114,19 @@ verPedido(pedido: PedidoModel) {
   }
 }
 
-editarPedido(pedido: PedidoModel){
 
-}
+deletarPedido(id:number){
+  const confirmado = window.confirm('Tem certeza que deseja excluir este pedido?');
+  if(confirmado){
+    this.service.deletarPedido(id).subscribe({
+      next: () => {
+       this.utilService.mostrarMensagem("Pedido deletado com sucesso!"),
+       this.pedidos = this.pedidos.filter(p => p.id !== id);
 
-deletarPedido(pedido:PedidoModel){
-  
+      },
+      error:() => this.utilService.mostrarMensagem("Erro ao deletar pedido!")
+    })
+  }
 }
 
 

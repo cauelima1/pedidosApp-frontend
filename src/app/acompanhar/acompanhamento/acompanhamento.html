@@ -1,1 +1,42 @@
-<p>acompanhamento works!</p>
+<div class="flex p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
+    <div class="flex-col">
+        <h1 class="text-2xl font-semibold text-center mb-2">Acompanhamento de Pedido</h1>
+        @if(!selecionar){
+        <div class="flex-col text-center">
+            <label class="text-lg font-semibold mb-2">Cliente</label>
+            <select [(ngModel)]="selecionarCliente" name="selecionarCliente"  (change)="carregarPedidos(selecionarCliente?.cnpj || 0)"
+                class="border p-2 rounded w-full mb-2 text-lg">
+
+                @for(cliente of clientes; track cliente.nome){
+                <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
+                }
+            </select>
+   
+        </div>
+        }
+    </div>
+
+    <div class="px-2 flex-col">
+        <br><br>
+        <div class="flex-col text-center">
+            <label class="text-lg font-semibold mb-2">Pedido</label>
+            <select [(ngModel)]="selecionarPedido" name="selecionarPedido"
+                class="border p-2 rounded w-full mb-2 text-lg">
+
+                @for(pedido of pedidos; track pedido.id){
+                <option [ngValue]="pedido" class="text-lg font-sans">{{pedido.id}}</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    @if(selecionarPedido){
+        <div class="flex flex-col text-center px-4 py-4">
+            <a class="w-30 bg-gray-500 text-white px-4 py-2 rounded mb-4 hover:bg-gray-800">Editar</a>
+            <a class="w-30 bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-gree-800">Atualizar Status</a>
+        </div>
+    }
+
+   
+
+</div>

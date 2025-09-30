@@ -108,32 +108,32 @@ export class Visualizar {
     header();
     const startTabelaY = clienteInfo();
 
-    autoTable(doc, {
-      startY: startTabelaY,
-      head: [['Item', 'Nome', 'Qtd', 'Valor Unitário', 'Valor Total']],
-      body: this.items.map((item, index) => [
-        index + 1,
-        safe(item.nome),
-        safe(item.quantidade),
-        formatCurrency(item.prcf),
-        formatCurrency(item.vtot)
-      ]),
-      didDrawPage: () => {
-        header();
-        clienteInfo();
-        footer();
-      },
-      margin: { top: 60, bottom: 40, left: marginLeft, right: marginRight },
-      styles: {
-        fontSize: 10,
-        cellPadding: 4
-      },
-      headStyles: {
-        fillColor: [240, 240, 240],
-        textColor: [0, 0, 0],
-        fontStyle: 'bold'
-      }
-    });
+autoTable(doc, {
+  startY: startTabelaY,
+  head: [['Item', 'Nome', 'Qtd', 'Valor Unitário', 'Valor Total']],
+  body: this.items.map((item, index) => [
+    index + 1,
+    safe(item.nome),
+    safe(item.quantidade),
+    formatCurrency(item.prcf),
+    formatCurrency(item.vtot)
+  ]),
+  didDrawPage: (data) => {
+    header();
+    footer();
+  },
+  margin: { top: 60, bottom: 40, left: marginLeft, right: marginRight },
+  styles: {
+    fontSize: 10,
+    cellPadding: 4
+  },
+  headStyles: {
+    fillColor: [240, 240, 240],
+    textColor: [0, 0, 0],
+    fontStyle: 'normal'
+  }
+});
+
 
     // 💰 Valor total do pedido
     const finalY = (doc as any).lastAutoTable.finalY;
