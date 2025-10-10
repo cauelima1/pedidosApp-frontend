@@ -7,6 +7,7 @@ import { PedidoService } from '../../pedidos/pedido-service';
 import { AcompanharService } from '../acompanhar-service';
 import { Item } from '../../pedidos/pedido/itemModel';
 import { UtilServices } from '../../util-services';
+import { ItemService } from '../../pedidos/item-service';
 
 @Component({
   selector: 'app-acompanhamento',
@@ -15,6 +16,8 @@ import { UtilServices } from '../../util-services';
   styleUrl: './acompanhamento.scss'
 })
 export class Acompanhamento implements OnInit {
+  mostrarStatus = false;
+  criarItem = false;
   editarPedidoHabilitado = false;
   editarPedido = false;
   pedido = false;
@@ -27,6 +30,11 @@ export class Acompanhamento implements OnInit {
   selecionarCliente?: Cliente;
   selecionarPedido?: PedidoModel;
   editarForm: FormGroup;
+  itemForm: FormGroup;
+  statusSelecionado?: string;
+  statusPedido?: string;
+  mostrarPedido = false;
+  inputsDesabilitados = false;
 
   pedidoSelecionado: PedidoModel = {
     condicaoFrete: '',
@@ -44,8 +52,8 @@ export class Acompanhamento implements OnInit {
 
 
 
-  constructor(private clienteService: ClienteService, private utilService:UtilServices,
-    private pedidoService: PedidoService, private service: AcompanharService) {
+  constructor(private clienteService: ClienteService, private utilService: UtilServices,
+    private pedidoService: PedidoService, private service: AcompanharService, private itemService: ItemService) {
 
     this.editarForm = new FormGroup({
       observacoes: new FormControl(''),
@@ -57,7 +65,15 @@ export class Acompanhamento implements OnInit {
       frete: new FormControl('', Validators.required),
       stvd: new FormControl('', Validators.required),
       imcs: new FormControl('', Validators.required)
-    })
+    }),
+      this.itemForm = new FormGroup({
+        nome: new FormControl('', Validators.required),
+        fabricante: new FormControl,
+        tipo: new FormControl('', Validators.required),
+        obs: new FormControl,
+        quantidade: new FormControl('', Validators.required),
+        custo: new FormControl('', Validators.required)
+      })
   }
 
 
@@ -66,7 +82,58 @@ export class Acompanhamento implements OnInit {
 
   }
 
+  adicionarItem() {
+    this.criarItem = true;
+  }
 
+
+
+
+
+  atualizarStatus(id: number) {
+    this.pedidoSelecionado = this.pedidos?.find(p => p.id === this.selecionarPedido?.id)!;
+    console.log("Esté pedido é ", this.pedidoSelecionado);
+    this.mostrarStatus = true;
+  }
+
+  salvarStatus() {
+    const novoStatus = this.statusSelecionado;
+    const id = this.pedidoSelecionado.id;
+    if (novoStatus != null && id != null) {
+      this.service.mudarStatus(novoStatus, id).subscribe({
+        next: (pedidoStatusNovo: PedidoModel) => {
+          this.utilService.mostrarMensagem("Status alterado com sucesso.")
+          this.mostrarPedido = true;
+          this.inputsDesabilitados = true;
+          console.log("Novo Status do pedido:" + pedidoStatusNovo.statusPedido)
+        },
+        error: () => this.utilService.mostrarMensagem("Selecione uma opção!")
+
+      })
+    } else {
+      this.utilService.mostrarMensagem("Ocorreu algum erro ao atualizar o status do pedido.");
+    }
+  }
+
+  salvarItem() {
+    this.itemForm.markAllAsTouched();
+    console.log(this.itemForm.valid)
+    if (this.itemForm.valid) {
+      const novoItem: Item = this.itemForm.value;
+      novoItem.idPedido = this.pedidoSelecionado.id;
+      this.itemService.saveItem(novoItem).subscribe({
+        next: (itemCadastrado: Item) => {
+          this.utilService.mostrarMensagem("Item cadastrado!"),
+            this.items?.push(itemCadastrado),
+            this.listarItems = true;
+        },
+        error: () => this.utilService.mostrarMensagem("Ocorreu um erro ao salvar item.")
+      })
+      this.itemForm.reset();
+      this.criarItem = false;
+    }
+
+  }
 
   carregarClientes(): void {
     this.clienteService.listaClientes().subscribe({
@@ -100,11 +167,11 @@ export class Acompanhamento implements OnInit {
 
   salvarEdicao() {
     this.service.confirmarAlteracao(this.pedidoSelecionado).subscribe({
-      next:() => {
-        this.utilService.mostrarMensagem("Cliente alterado com sucesso")
-        
+      next: () => {
+        this.utilService.mostrarMensagem("Pedido alterado com sucesso")
+
       },
-      error:() => this.utilService.mostrarMensagem("Ocorreu algum erro.")
+      error: () => this.utilService.mostrarMensagem("Ocorreu algum erro.")
     })
     this.editarPedidoHabilitado = false;
   }
@@ -123,16 +190,29 @@ export class Acompanhamento implements OnInit {
       }
     }
   }
-  
-  
-  habilitarEdicao() {
-  this.editarPedidoHabilitado = true;
-}
 
+
+  habilitarEdicao() {
+    this.editarPedidoHabilitado = true;
+  }
+
+  limparForumulario() {
+    this.itemForm.reset();
+  }
 
   isCampoInvalido(campo: string): boolean {
     const nomeCampo = this.editarForm.get(campo);
     return nomeCampo?.invalid && nomeCampo?.touched || false;
   }
+
+  isCampoInvalidoItemForm(campo: string): boolean {
+    const nomeCampo = this.itemForm.get(campo);
+    return nomeCampo?.invalid && nomeCampo?.touched || false;
+  }
+
+  travarInputs() {
+    this.inputsDesabilitados = true;
+  }
+
 
 }

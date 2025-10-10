@@ -45,6 +45,15 @@ export class PedidoService {
         return this.http.get<Cliente>(url, { headers })
   }
 
+
+
+  confirmarAlteracao(pedido: PedidoModel): Observable<PedidoModel> {
+  const headers = this.captarHeaders();
+  const url = `${this.apiUrl}/${pedido.id}`; // inclui o ID na URL
+  return this.http.put<PedidoModel>(url, pedido, { headers });
+}
+
+
   captarHeaders(): HttpHeaders {
     const token = localStorage.getItem("jwtToken");
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

@@ -4,7 +4,7 @@
         @if(!selecionar){
         <div class="flex-col text-center">
             <label class="text-lg font-semibold mb-2">Cliente</label>
-            <select [(ngModel)]="selecionarCliente" name="selecionarCliente"
+            <select [(ngModel)]="selecionarCliente" name="selecionarCliente" [disabled]="inputsDesabilitados"
                 (change)="carregarPedidos(selecionarCliente?.cnpj || 0)" class="border p-2 rounded w-full mb-2 text-lg">
 
                 @for(cliente of clientes; track cliente.nome){
@@ -20,7 +20,7 @@
         <br><br>
         <div class="flex-col text-center">
             <label class="text-lg font-semibold mb-2">Pedido</label>
-            <select [(ngModel)]="selecionarPedido" name="selecionarPedido"
+            <select [(ngModel)]="selecionarPedido" name="selecionarPedido" [disabled]="inputsDesabilitados"
                 class="border p-2 rounded w-full mb-2 text-lg">
 
                 @for(pedido of pedidos; track pedido.id){
@@ -33,13 +33,48 @@
     @if(selecionarPedido){
     <div class="flex flex-col text-center px-4 py-4">
         <a type="button" class="w-30 bg-gray-500 text-white px-4 py-2 rounded mb-4 hover:bg-gray-800"
-            (click)="editar()">Editar</a>
-        <a class="w-30 bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-gree-800">Atualizar Status</a>
+            (click)="editar()">Editar Pedido</a>
+
+        <a type="button" class="w-30 bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-800"
+            (click)="atualizarStatus(selecionarPedido.id ?? 0)">Atualizar Status</a>
     </div>
+    }
+    <div class="flex flex-col justify-center">
+
+        @if(mostrarStatus){
+        <label class="font-semibold text-2xl py-2">Atualizar para:</label>
+        <select [(ngModel)]="statusSelecionado" class="py-2 border text-xl" [disabled]="inputsDesabilitados">
+            <option [ngValue]="">Selecione uma opção</option>
+            <option [ngValue]="'ENCERRADO_REPROVADO'">ENCERRADO_REPROVADO</option>
+            <option [ngValue]="'ENCERRADO_APROVADO'">ENCERRADO_APROVADO</option>
+        </select>
+        <button (click)="salvarStatus()"
+            class="mt-3 w-30 bg-blue-500 text-white px-4 py-2 rounded mb-4 hover:bg-blue-800">Salvar Status</button>
+        }
+
+    </div>
+
+    @if(mostrarPedido){
+    <div class="ml-4 flex flex-col p-4 bg-white rounded-lg shadow-md">
+        <label class="text-gray-700 text-base font-medium">
+            Identificação do Cliente: <span class="font-semibold text-gray-900">{{ selecionarCliente?.nome }}</span>
+        </label>
+        <label class="text-gray-700 text-base font-medium">
+            Número do pedido: <span class="font-semibold text-gray-900">{{ pedidoSelecionado.id }}</span>
+        </label>
+        <label class="text-gray-700 text-base font-medium">
+            Status atual: <span class="font-semibold text-gray-900">{{ statusSelecionado }}</span>
+        </label>
+
+        <button class="mt-3 w-30 bg-gray-400 text-white px-4 py-2 rounded mb-4 hover:bg-gray-600"> OK </button>
+    </div>
+
     }
 
 </div>
 
+
+<!-- Editar Pedido -->
 @if(editarPedido){
 <div class="flex flex-col p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
     <p class="text-center text-lg mb-2">Orçamento - {{ pedidoSelecionado.id }}</p>
@@ -140,13 +175,17 @@
                 </div>
             </div>
             @if(editarPedidoHabilitado) {
-            <button type="submit">Salvar</button>
+            <button
+                class="mt-3 w-60 bg-green-500 text-white text-lg py-2 rounded hover:bg-green-700 transition-colors mr-2"
+                type="submit">Salvar</button>
             }
 
-
         </form>
+
+
         @if(!editarPedidoHabilitado){
-        <button (click)="habilitarEdicao()">Editar Pedido</button>
+        <button class="w-60 bg-blue-600 text-white text-lg py-2 rounded hover:bg-blue-700 transition-colors mr-2"
+            (click)="habilitarEdicao()">Editar Pedido</button>
         }
         <div class="py-2">
             <h1 class="text-2xl font-semibold text-center py-4">Produtos:</h1>
@@ -195,7 +234,7 @@
                             <td class="px-4 py-2 text-center">
                                 @if(item.id != null){
                                 <button
-                                    class="text-red-600 hover:text-red-800 font-bold px-2 py-1 rounded transition-colors duration-200"
+                                    class="text-red-500 hover:text-red-800 font-bold px-2 py-1 rounded transition-colors duration-200"
                                     (click)="deletarItem(item.id)" title="Remover item">
                                     ✕
                                 </button>
@@ -207,11 +246,108 @@
                         }
                     </tbody>
                 </table>
-            </div>
 
+            </div>
+            <button
+                class="mt-3 w-60 bg-green-500 text-white text-lg py-2 rounded hover:bg-green-700 transition-colors mr-2"
+                (click)="adicionarItem()">Adicionar Item</button>
             }
 
-            
+
+            @if(criarItem){
+            <div class="px-10 max-w-screen-xl mx-auto bg-white shadow rounded-lg mt-6 mb-10">
+                <h1 class="text-xl font-semibold text-center mb-4">Adicionar item</h1>
+
+                <form [formGroup]="itemForm" (ngSubmit)="salvarItem()" class="space-y-4">
+
+                    <!-- Nome do produto -->
+                    <div>
+                        <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome do produto:</label>
+                        <textarea id="nome" name="nome" formControlName="nome"
+                            class="border border-gray-300 rounded px-3 py-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        @if(isCampoInvalidoItemForm('nome')){
+                        <span class="text-red-500 text-sm">Campo obrigatório</span>
+                        }
+                    </div>
+
+                    <!-- Linha de campos agrupados -->
+                    <div class="grid grid-cols-2 gap-4">
+
+                        <!-- Fabricante -->
+                        <div>
+                            <label for="fabricante"
+                                class="block text-sm font-medium text-gray-700 mb-1">Fabricante:</label>
+                            <input id="fabricante" name="fabricante" formControlName="fabricante"
+                                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                        </div>
+
+                        <!-- Quantidade -->
+                        <div>
+                            <label for="quantidade"
+                                class="block text-sm font-medium text-gray-700 mb-1">Quantidade:</label>
+                            <input id="quantidade" name="quantidade" formControlName="quantidade" type="number"
+                                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            @if(isCampoInvalidoItemForm('quantidade')){
+                            <span class="text-red-500 text-sm">Campo obrigatório</span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Linha de campos agrupados -->
+                    <div class="grid grid-cols-2 gap-4">
+
+                        <!-- Tipo de medida -->
+                        <div>
+                            <label for="tipo" class="block text-sm font-medium text-gray-700 mb-1">Tipo de
+                                medida:</label>
+                            <select id="tipo" name="tipo" formControlName="tipo"
+                                class="border border-gray-300 rounded px-3 py-2 w-full bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="PC">PC</option>
+                                <option value="M">M</option>
+                            </select>
+                            @if(isCampoInvalidoItemForm('tipo')){
+                            <span class="text-red-500 text-sm">Campo obrigatório</span>
+                            }
+                        </div>
+
+                        <!-- Custo unitário -->
+                        <div>
+                            <label for="custo" class="block text-sm font-medium text-gray-700 mb-1">Custo
+                                unitário:</label>
+                            <input id="custo" name="custo" formControlName="custo" type="number"
+                                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                            @if(isCampoInvalidoItemForm('custo')){
+                            <span class="text-red-500 text-sm">Campo obrigatório</span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Observações -->
+                    <div>
+                        <label for="obs" class="block text-sm font-medium text-gray-700 mb-1">Observações:</label>
+                        <textarea id="obs" name="obs" formControlName="obs"
+                            class="border border-gray-300 rounded px-3 py-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <!-- Botão -->
+                    <div class="text-end">
+                        <button type="submit"
+                            class="w-60 bg-blue-600 text-white text-lg py-2 rounded hover:bg-blue-700 transition-colors mr-2">Adicionar
+                            Item</button>
+
+
+                        <button (click)="limparForumulario()"
+                            class="w-60 bg-yellow-400 text-white text-lg py-2 rounded hover:bg-yellow-700 transition-colors mr-2">Limpar
+                            Formulário</button>
+
+
+                    </div>
+
+                </form>
+            </div>
+            }
 
         </div>
     </div>

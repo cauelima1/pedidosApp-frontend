@@ -20,11 +20,15 @@ import { Router } from '@angular/router';
 })
 
 export class Pedido implements OnInit {
+  pedidoAlterado: PedidoModel = new PedidoModel();
+  editarPedidoHabilitado = false;
+  editarPedido = false;
   isEditar = false;
   isDisabled = false;
   verPedidos: boolean = false;
   selecionar: boolean = false;
   criarPedido: boolean = false;
+   criarItemEditado: boolean = false;
   criarItem: boolean = false;
   listarItems: boolean = false;
   pedidos: PedidoModel[] = [];
@@ -113,6 +117,22 @@ verPedido(pedido: PedidoModel) {
     console.log("Deu errado carregar a tela de Visualizaçao;")
   }
 }
+
+editar(pedido:PedidoModel){
+  this.pedidoAlterado = pedido;
+  this.editarPedido=true;
+}
+
+  salvarEdicao() {
+    this.service.confirmarAlteracao(this.pedidoAlterado).subscribe({
+      next: () => {
+        this.utilService.mostrarMensagem("Pedido alterado com sucesso")
+
+      },
+      error: () => this.utilService.mostrarMensagem("Ocorreu algum erro.")
+    })
+    this.editarPedidoHabilitado = false;
+  }
 
 
 deletarPedido(id:number){
@@ -224,6 +244,14 @@ deletarPedido(id:number){
     this.listarItems = true;
   }
 
+    habilitarEdicao() {
+    this.editarPedidoHabilitado = true;
+  }
+
+    adicionarItem() {
+    this.criarItem = true;
+  }
+
   isCampoInvalido(campo: string): boolean {
     const nomeCampo = this.pedidoForm.get(campo);
     return nomeCampo?.invalid && nomeCampo?.touched || false;
@@ -234,9 +262,10 @@ deletarPedido(id:number){
     return nomeCampo?.invalid && nomeCampo?.touched || false;
   }
 
-  limparFormulario() {
+  limparForumulario() {
     this.itemForm.reset();
   }
+  
 
   recarregarPagina() {
     window.location.reload();
