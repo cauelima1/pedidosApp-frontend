@@ -10,7 +10,7 @@ const routes: Routes = [
     component: Login
   },
   {
-    path: 'home', 
+    path: '', 
     loadChildren: () =>
       import('./template/template-module').then(m => m.TemplateModule),
     canActivate: [AuthGuard]

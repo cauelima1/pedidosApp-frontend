@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PedidoModel } from './pedido/pedidoModel';
 import { Cliente } from '../clientes/cliente-component/clienteModel';
-import { Pedido } from './pedido/pedido';
+
 
 
 @Injectable({
@@ -13,7 +13,6 @@ export class PedidoService {
   apiUrl: string = "http://localhost:8080/pedidos"
 
   constructor(private http: HttpClient) {
-
   }
 
   deletarPedido(id: number){
@@ -27,7 +26,12 @@ export class PedidoService {
     return this.http.post<number>(this.apiUrl, pedido, { headers })
   }
 
-  mostrarPedidos(cnpj: number): Observable<PedidoModel[]> {
+  mostrarPedidos(): Observable<PedidoModel[]> {
+    const headers = this.captarHeaders();
+    return this.http.get<PedidoModel[]>(this.apiUrl , { headers })
+  }
+
+  mostrarPedidosPorCliente(cnpj: number): Observable<PedidoModel[]> {
     const headers = this.captarHeaders();
     const url = `${this.apiUrl}/${cnpj}`;
     return this.http.get<PedidoModel[]>(url , { headers })

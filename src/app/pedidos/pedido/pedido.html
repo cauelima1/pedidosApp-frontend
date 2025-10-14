@@ -81,21 +81,29 @@
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
             <thead class="bg-gray-100 text-gray-700">
                 <tr>
-                    <th class="px-4 py-2 text-left">ID</th>
+                    <th class="px-4 py-2 text-left text-lg font-bold">ID</th>
                     <th class="px-4 py-2 text-left">Data de Emissão</th>
                     <th class="px-4 py-2 text-left">Quantidade de Items: </th>
                     <th class="px-4 py-2 text-left">Observações</th>
+                    <th class="px-4 py-2 text-left">Status</th>
                     <th class="px-4 py-2 text-left">Ações</th>
+
                 </tr>
             </thead>
             <tbody>
                 @for(pedido of pedidos; track pedido.id){
                 <tr class="border-t hover:bg-gray-50">
-         
-                    <td class="px-4 py-2">{{ pedido.id }}</td>
-                    <td class="px-4 py-2">{{ pedido.data | date:'dd/MM/yyyy' }}</td>
-                    <td class="px-4 py-2">{{ pedido.items?.length }} Items</td>
-                    <td class="px-4 py-2">{{ pedido.observacoes}}</td>
+
+                    <td class="px-4 py-2 ">{{ pedido.id }}</td>
+                    <td class="px-4 py-2 ">{{ pedido.data | date:'dd/MM/yyyy' }}</td>
+                    <td class="px-4 py-2 ">{{ pedido.items?.length }} Items</td>
+                    <td class="px-4 py-2 ">{{ pedido.observacoes}}</td>
+                    <td class="w-40 text-center" [ngClass]="{
+                                    'bg-red-500 text-white': pedido.statusPedido === 'ENCERRADO_REPROVADO',
+                                    'bg-green-500 text-white': pedido.statusPedido === 'ENCERRADO_APROVADO'
+                                    }">
+                        {{ pedido.statusPedido }}
+                    </td>
 
                     <a (click)="verPedido(pedido)" class="px-1 py-1 hover:cursor-pointer">
                         <mat-icon fontIcon="search"></mat-icon>
@@ -119,14 +127,14 @@
 @if(criarPedido){
 <div class="px-10 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-4 mb-5">
     <h1 class="text-lg font-semibold text-center mb-2">Adicionar Pedido</h1>
-    <p class="text-lg text-center py-4">Informe todos os campos em %, somente números: </p>
+    <h2 class="text-lg text-center py-4">Informe as tributações: </h2>
 
     <form [formGroup]="pedidoForm" (ngSubmit)="salvarPedido()">
         <div class="grid grid-cols-3 gap-x-10 gap-y-6 justify-center text-center">
 
             <!-- IPI -->
             <div>
-                <label class="border text-lg">IPI: </label>
+                <label class="text-lg font-semibold">IPI: </label>
                 <input id="ipi" formControlName="ipi" name="ipi"
                     class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
                 <label class="font-semibold text-lg"> %</label>
@@ -137,7 +145,7 @@
 
             <!-- ST -->
             <div>
-                <label class="border text-lg">ST: </label>
+                <label class="text-lg font-semibold">ST: </label>
                 <input id="st" formControlName="st" name="st"
                     class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
                 <label class="font-semibold text-lg"> %</label>
@@ -146,20 +154,9 @@
                 }
             </div>
 
-            <!-- ICMS -->
-            <div>
-                <label class="border text-lg">ICMS: </label>
-                <input id="icms" formControlName="icms" name="icms"
-                    class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
-                <label class="font-semibold text-lg"> %</label>
-                @if(isCampoInvalido('icms')){
-                <span class="text-red-500 text-sm">Campo obrigatório</span>
-                }
-            </div>
-
             <!-- MC -->
             <div>
-                <label class="border text-lg">MC: </label>
+                <label class="text-lg font-semibold">MC: </label>
                 <input id="mc" formControlName="mc" name="mc"
                     class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
                 <label class="font-semibold text-lg"> %</label>
@@ -170,7 +167,7 @@
 
             <!-- MC1 -->
             <div>
-                <label class="border text-lg">MC1: </label>
+                <label class="text-lg font-semibold">MC1: </label>
                 <input id="mc1" formControlName="mc1" name="mc1"
                     class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
                 <label class="font-semibold text-lg"> %</label>
@@ -181,7 +178,7 @@
 
             <!-- Frete -->
             <div>
-                <label class="border text-lg">Frete: </label>
+                <label class="text-lg font-semibold">Frete: </label>
                 <input id="frete" formControlName="frete" name="frete"
                     class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
                 <label class="font-semibold text-lg"> %</label>
@@ -192,7 +189,7 @@
 
             <!-- stvd -->
             <div>
-                <label class="border text-lg">STVD: </label>
+                <label class="text-lg font-semibold">STVD: </label>
                 <input id="stvd" formControlName="stvd" name="stvd"
                     class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
                 <label class="font-semibold text-lg"> %</label>
@@ -201,12 +198,45 @@
                 }
             </div>
 
+                        <!-- ICMS -->
+            <div>
+                <label class="text-lg">ICMS: </label>
+                <input id="icms" formControlName="icms" name="icms"
+                    class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                <label class="font-semibold text-lg"> %</label>
+                @if(isCampoInvalido('icms')){
+                <span class="text-red-500 text-sm">Campo obrigatório</span>
+                }
+            </div>
+            
+                        <!-- PIS -->
+            <div>
+                <label class="text-lg">PIS: </label>
+                <input id="pis" formControlName="pis" name="pis"
+                    class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                <label class="font-semibold text-lg"> %</label>
+                @if(isCampoInvalido('pis')){
+                <span class="text-red-500 text-sm">Campo obrigatório</span>
+                }
+            </div>
+            
+                        <!-- COFINS -->
+            <div>
+                <label class="text-lg">COFINS: </label>
+                <input id="cofins" formControlName="cofins" name="cofins"
+                    class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-20" type="number" />
+                <label class="font-semibold text-lg"> %</label>
+                @if(isCampoInvalido('icms')){
+                <span class="text-red-500 text-sm">Campo obrigatório</span>
+                }
+            </div>
+
         </div>
 
-        <div class="flex-row justify-center text-center mb-10">
-            <!-- Observacoes -->
+        <div class="flex-row justify-center text-center mt-10">
+            <!-- Validade da Proposta -->
             <div class="px-2">
-                <label class="border text-lg">Observações: </label>
+                <label class="text-lg">Validade da proposta: </label>
                 <textarea id="observacoes" formControlName="observacoes" name="observacoes"
                     class="shadow-md border border-gray-300 rounded mb-2 px-3 py-2 text-lg w-full" type="text">
             </textarea>
@@ -214,7 +244,7 @@
 
             <!-- Condicoes Frete -->
             <div class="px-2">
-                <label class="border text-lg">Condições de Frete: </label>
+                <label class="text-lg">Condições de Frete: </label>
                 <textarea id="condicaoFrete" formControlName="condicaoFrete" name="condicaoFrete"
                     class="shadow-md border rounded mb-2 px-3 py-2 text-lg w-full" type="text">
             </textarea>

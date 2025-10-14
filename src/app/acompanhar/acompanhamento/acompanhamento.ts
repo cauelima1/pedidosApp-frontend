@@ -64,7 +64,9 @@ export class Acompanhamento implements OnInit {
       mc1: new FormControl('', Validators.required),
       frete: new FormControl('', Validators.required),
       stvd: new FormControl('', Validators.required),
-      imcs: new FormControl('', Validators.required)
+      imcs: new FormControl('', Validators.required),
+      pis: new FormControl('', Validators.required),
+      cofins: new FormControl('', Validators.required)
     }),
       this.itemForm = new FormGroup({
         nome: new FormControl('', Validators.required),
@@ -85,10 +87,6 @@ export class Acompanhamento implements OnInit {
   adicionarItem() {
     this.criarItem = true;
   }
-
-
-
-
 
   atualizarStatus(id: number) {
     this.pedidoSelecionado = this.pedidos?.find(p => p.id === this.selecionarPedido?.id)!;
@@ -113,6 +111,12 @@ export class Acompanhamento implements OnInit {
     } else {
       this.utilService.mostrarMensagem("Ocorreu algum erro ao atualizar o status do pedido.");
     }
+  }
+
+  limparFormPedido(){
+    this.mostrarStatus=false;
+    this.mostrarStatus=false;
+    this.mostrarPedido=false;
   }
 
   salvarItem() {
@@ -145,9 +149,9 @@ export class Acompanhamento implements OnInit {
   }
 
   carregarPedidos(id: number) {
-    this.pedidoService.mostrarPedidos(id).subscribe({
+    this.pedidoService.mostrarPedidosPorCliente(id).subscribe({
       next: (listaPedidos) => {
-        this.pedidos = listaPedidos;
+        this.pedidos = listaPedidos.filter(p => p.statusPedido == "ABERTO");
       },
       error: (err) => console.error("erro ao carregar pedido :", err)
     })
@@ -157,6 +161,7 @@ export class Acompanhamento implements OnInit {
   editar() {
     console.log("ID selecionado", this.selecionarPedido?.id);
     this.editarPedido = true;
+    this.clienteSelecionado = this.selecionarCliente;
     if (this.selecionarPedido) {
       this.pedidoSelecionado = this.pedidos?.find(p => p.id === this.selecionarPedido?.id)!;
       console.log("Pedido Selecionado:", this.pedidoSelecionado);

@@ -51,6 +51,8 @@ export class Pedido implements OnInit {
       st: new FormControl('', Validators.required),
       mc: new FormControl('', Validators.required),
       mc1: new FormControl('', Validators.required),
+      pis: new FormControl('', Validators.required),
+      cofins: new FormControl('', Validators.required),
       frete: new FormControl('', Validators.required),
       stvd: new FormControl('', Validators.required),
       condicaoFrete: new FormControl(''),
@@ -83,7 +85,7 @@ export class Pedido implements OnInit {
       this.pedidoForm.disable();
       this.criarItem = true;
       this.isDisabled = true;
-
+      console.log(novoPedido.data)
     }
   }
 
@@ -214,7 +216,7 @@ deletarPedido(id:number){
     const cnpj = this.clienteSelecionado?.cnpj;
     console.log(cnpj)
     if (cnpj) {
-      this.service.mostrarPedidos(cnpj).subscribe({
+      this.service.mostrarPedidosPorCliente(cnpj).subscribe({
         next: (listPedidos: PedidoModel[]) => {
           this.pedidos = listPedidos;
           this.utilService.mostrarMensagem("Mostrando lista de Pedidos para cliente");

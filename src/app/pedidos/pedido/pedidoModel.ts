@@ -17,4 +17,6 @@ export class PedidoModel {
     vdot?: string;
     stvd?: string;
     icms?: string;
+    pis?: string;
+    cofins?: string;
 }
