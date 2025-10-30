@@ -1,5 +1,5 @@
 <div class="p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
-    <h1 class="text-2xl font-semibold text-center">Pedidos por cliente</h1>
+    <h1 class="text-2xl font-semibold text-center">Orçamentos por cliente</h1>
 
     <div class="flex justify-center">
 
@@ -57,12 +57,12 @@
                 <div class="flex gap-6">
                     <button (click)="mostrarTelaPedidos()"
                         class="mt-2 text-lg w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-900">
-                        Ver Pedidos</button>
+                        Ver Orçamentos</button>
 
 
                     <button (click)="mostrarTelaNovoPedido()"
                         class="mt-2 text-lg w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-900">
-                        Criar Pedido</button>
+                        Criar Orçamento</button>
                     <hr>
                 </div>
             </div>
@@ -75,7 +75,7 @@
 
 @if(verPedidos){
 <div class="px-10">
-    <h3 class="text-xl font-semibold mb-4 text-gray-800">📦 Mostrando pedidos para cliente</h3>
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">📦 Mostrando orçamentos de cliente</h3>
 
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
@@ -92,15 +92,15 @@
             </thead>
             <tbody>
                 @for(pedido of pedidos; track pedido.id){
-                <tr class="border-t hover:bg-gray-50">
+                <tr class="border-t hover:bg-gray-50 ">
 
                     <td class="px-4 py-2 ">{{ pedido.id }}</td>
                     <td class="px-4 py-2 ">{{ pedido.data | date:'dd/MM/yyyy' }}</td>
                     <td class="px-4 py-2 ">{{ pedido.items?.length }} Items</td>
                     <td class="px-4 py-2 ">{{ pedido.observacoes}}</td>
-                    <td class="w-40 text-center" [ngClass]="{
-                                    'bg-red-500 text-white': pedido.statusPedido === 'ENCERRADO_REPROVADO',
-                                    'bg-green-500 text-white': pedido.statusPedido === 'ENCERRADO_APROVADO'
+                    <td [ngClass]="{
+                                    'bg-orange-200 text-white': pedido.statusPedido === 'ENCERRADO_REPROVADO',
+                                    'bg-green-400 text-white': pedido.statusPedido === 'ENCERRADO_APROVADO'
                                     }">
                         {{ pedido.statusPedido }}
                     </td>
@@ -123,10 +123,9 @@
 
 
 
-
 @if(criarPedido){
 <div class="px-10 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-4 mb-5">
-    <h1 class="text-lg font-semibold text-center mb-2">Adicionar Pedido</h1>
+    <h1 class="text-lg font-semibold text-center mb-2">Adicionar Orçamento</h1>
     <h2 class="text-lg text-center py-4">Informe as tributações: </h2>
 
     <form [formGroup]="pedidoForm" (ngSubmit)="salvarPedido()">

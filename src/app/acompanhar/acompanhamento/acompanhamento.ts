@@ -114,9 +114,9 @@ export class Acompanhamento implements OnInit {
   }
 
   limparFormPedido(){
-    this.mostrarStatus=false;
-    this.mostrarStatus=false;
-    this.mostrarPedido=false;
+    
+    window.location.reload();
+    
   }
 
   salvarItem() {
@@ -136,6 +136,9 @@ export class Acompanhamento implements OnInit {
       this.itemForm.reset();
       this.criarItem = false;
     }
+  }
+
+  editarItem(id: number){
 
   }
 

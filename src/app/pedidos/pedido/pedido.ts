@@ -110,7 +110,7 @@ export class Pedido implements OnInit {
 verPedido(pedido: PedidoModel) {
   console.log("Visualizando pedido:" , pedido);
     if (this.clienteSelecionado) {
-          this.router.navigate(['home/visualizar'], {
+          this.router.navigate(['/visualizar'], {
           state: {
             pedido: pedido,
             cliente: this.clienteSelecionado
@@ -157,7 +157,7 @@ deletarPedido(id:number){
       this.service.finalizarPedido(this.idPedido).subscribe({
         next: (pedidoFinalizado: PedidoModel) => {
           this.utilService.mostrarMensagem("Pedido Finalizado!");
-          this.router.navigate(['home/visualizar'], {
+          this.router.navigate(['/visualizar'], {
             state: {
               pedido: pedidoFinalizado,
               cliente: this.clienteSelecionado

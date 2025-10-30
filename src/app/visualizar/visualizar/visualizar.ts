@@ -110,12 +110,9 @@ const header = () => {
       doc.setTextColor(50);
 
       const footerLines = [
-        'ATENCIOSAMENTE,',
         'CROSSFOX COMÉRCIO DE CONDUTORES ELÉTRICOS // CNPJ: 08.573.550/0001-01',
-        'JOSE ANTONIO P. SEQUEIRA',
-        'DEPTO. VENDAS',
-        'FONE/FAX: (11) 2902-1070 RAMAL 1089 / (12) 99730-4346',
-        'e-mail: jose.antonio@crossfoxeletrica.com.br'
+        'Endereço: Rua Amambaí, 270 - Vila Maria - cep: 02115-000 - São Paulo/ SP',
+        'Contato: (11) 2902-1070 RAMAL 1089 / (12) 99730-4346',
       ];
 
       let currentY = footerY;

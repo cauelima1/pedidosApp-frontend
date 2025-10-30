@@ -3,6 +3,7 @@ import { PedidoService } from '../../pedidos/pedido-service';
 import { PedidoModel } from '../../pedidos/pedido/pedidoModel';
 
 
+
 @Component({
   selector: 'app-home',
   standalone: false,
@@ -11,9 +12,41 @@ import { PedidoModel } from '../../pedidos/pedido/pedidoModel';
 })
 export class Home implements OnInit {
   pedidos: PedidoModel[] = [];
-  pedidosFiltrados7: PedidoModel[] = [];
-  pedidosFiltradosMes: PedidoModel[] = [];
-  pedidosFiltradosAno: PedidoModel[] = [];
+
+  pedidosFiltrados7Abertos: PedidoModel[] = [];
+  pedidosFiltrados7Reprovados: PedidoModel[] = [];
+  pedidosFiltrados7Aprovados: PedidoModel[] = [];
+
+  somaPedidosAbertos7Dias?: number;
+  somaPedidosAbertos7DiasFormatado?: string;
+  somaPedidosAprovados7Dias?: number;
+  somaPedidosAprovados7DiasFormatado?: string;
+  somaPedidosReprovados7Dias?: number;
+  somaPedidosReprovados7DiasFormatado?: string;
+
+  pedidosFiltradosMesAbertos: PedidoModel[] = [];
+  pedidosFiltradosMesAprovados: PedidoModel[] = [];
+  pedidosFiltradosMesReprovados: PedidoModel[] = [];
+
+  somaPedidosAbertosMes?: number;
+  somaPedidosAbertosMesFormatado?: string;
+  somaPedidosAprovadosMes?: number;
+  somaPedidosAprovadosMesFormatado?: string;
+  somaPedidosReprovadosMes?: number;
+  somaPedidosReprovadosMesFormatado?: string;
+
+  pedidosFiltradosAnoAbertos: PedidoModel[] = [];
+  pedidosFiltradosAnoReprovados: PedidoModel[] = [];
+  pedidosFiltradosAnoAprovados: PedidoModel[] = [];
+
+  somaPedidosAbertosAno?: number;
+  somaPedidosAbertosAnoFormatado?: string;
+  somaPedidosAprovadosAno?: number;
+  somaPedidosAprovadosAnoFormatado?: string;
+  somaPedidosReprovadosAno?: number;
+  somaPedidosReprovadosAnoFormatado?: string;
+
+
 
   constructor(private service: PedidoService) { }
 
@@ -21,6 +54,7 @@ export class Home implements OnInit {
     this.filtrar7Dias();
     this.filtrar30Dias();
     this.filtrar360Dias();
+
   }
 
   filtrar7Dias() {
@@ -44,9 +78,30 @@ export class Home implements OnInit {
           return dataConvertida >= seteDiasAtras && dataConvertida <= hoje;
         });
 
-        console.log('Pedidos dos últimos 7 dias:', pedidosRecentes.length);
-        // Se quiser exibir em tela:
-        this.pedidosFiltrados7 = pedidosRecentes;
+
+        this.pedidosFiltrados7Abertos = pedidosRecentes.filter(p => p.statusPedido == "ABERTO");
+        this.pedidosFiltrados7Reprovados = pedidosRecentes.filter(p => p.statusPedido == "ENCERRADO_REPROVADO");
+        this.pedidosFiltrados7Aprovados = pedidosRecentes.filter(p => p.statusPedido == "ENCERRADO_APROVADO");
+
+        this.somaPedidosAbertos7Dias = this.pedidosFiltrados7Abertos.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosAbertos7DiasFormatado = this.somaPedidosAbertos7Dias.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
+        this.somaPedidosAprovados7Dias = this.pedidosFiltrados7Aprovados.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosAprovados7DiasFormatado = this.somaPedidosAprovados7Dias.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
+        this.somaPedidosReprovados7Dias = this.pedidosFiltrados7Reprovados.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosReprovados7DiasFormatado = this.somaPedidosReprovados7Dias.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
+
       }
     });
   }
@@ -72,9 +127,29 @@ export class Home implements OnInit {
           return dataConvertida >= trintaDiasAtras && dataConvertida <= hoje;
         });
 
-        console.log('Pedidos dos últimos 30 dias:', pedidosRecentes.length);
-        // Se quiser exibir em tela:
-        this.pedidosFiltradosMes = pedidosRecentes;
+
+        this.pedidosFiltradosMesAbertos = pedidosRecentes.filter(p => p.statusPedido == "ABERTO");
+        this.pedidosFiltradosMesReprovados = pedidosRecentes.filter(p => p.statusPedido == "ENCERRADO_REPROVADO");
+        this.pedidosFiltradosMesAprovados = pedidosRecentes.filter(p => p.statusPedido == "ENCERRADO_APROVADO");
+
+        this.somaPedidosAbertosMes = this.pedidosFiltradosMesAbertos.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosAbertosMesFormatado = this.somaPedidosAbertosMes.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
+        this.somaPedidosAprovadosMes = this.pedidosFiltradosMesAprovados.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosAprovadosMesFormatado = this.somaPedidosAprovadosMes.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
+        this.somaPedidosReprovadosMes = this.pedidosFiltradosMesReprovados.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosReprovadosMesFormatado = this.somaPedidosReprovadosMes.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
       }
     });
 
@@ -101,9 +176,29 @@ export class Home implements OnInit {
           return dataConvertida >= anoAtras && dataConvertida <= hoje;
         });
 
-        console.log('Pedidos do último ano:', pedidosRecentes.length);
-        // Se quiser exibir em tela:
-        this.pedidosFiltradosAno = pedidosRecentes;
+
+        this.pedidosFiltradosAnoAbertos = pedidosRecentes.filter(p => p.statusPedido == "ABERTO");
+        this.pedidosFiltradosAnoReprovados = pedidosRecentes.filter(p => p.statusPedido == "ENCERRADO_REPROVADO");
+        this.pedidosFiltradosAnoAprovados = pedidosRecentes.filter(p => p.statusPedido == "ENCERRADO_APROVADO");
+
+
+                this.somaPedidosAbertosAno = this.pedidosFiltradosAnoAbertos.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosAbertosAnoFormatado = this.somaPedidosAbertosAno.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
+        this.somaPedidosAprovadosAno = this.pedidosFiltradosAnoAprovados.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosAprovadosAnoFormatado = this.somaPedidosAprovadosAno.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+
+        this.somaPedidosReprovadosAno = this.pedidosFiltradosAnoReprovados.reduce((total, pedido) => total + Number(pedido.valorTotal ?? 0), 0);
+        this.somaPedidosReprovadosAnoFormatado = this.somaPedidosReprovadosAno.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
       }
     });
 

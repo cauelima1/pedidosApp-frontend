@@ -1,27 +1,29 @@
 <div class="text-center mt-2">
-    <h1 class="text-lg font-bold">Acompanhe as estatísticas:</h1>
-</div>  
+  <h1 class="text-lg font-bold">Estatísticas gerais de orçamentos:</h1>
+</div>
 
 <div class="flex p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 gap-4">
 
   <div class="shadow-lg bg-gray-100 px-2 py-4 basis-1/3 text-center rounded-md">
     <h1 class="font-semibold mb-2">Últimos 7 dias</h1>
-    <p>x Orçamentos abertos</p>
-     <p>x Orçamentos reprovados</p>
-      <p>x Orçamentos aprovados</p>
+    <p class="py-1"> {{ pedidosFiltrados7Abertos.length }} Abertos | R$ {{somaPedidosAbertos7DiasFormatado}}</p>
+    <p class="py-1 bg-green-200">{{pedidosFiltrados7Aprovados.length }} Aprovados | R$ {{somaPedidosAprovados7DiasFormatado}}</p>
+    <p class="py-1 bg-orange-200">{{pedidosFiltrados7Reprovados.length }} Reprovados | R$ {{somaPedidosReprovados7DiasFormatado}}</p>
+
   </div>
 
   <div class="shadow-lg bg-gray-100 px-2 py-4 basis-1/3 text-center rounded-md">
     <h1 class="font-semibold mb-2">Últimos 30 dias</h1>
-      <p>x Orçamentos abertos</p>
-     <p>x Orçamentos reprovados</p>
-      <p>x Orçamentos aprovados</p>
+    <p class="py-1">{{pedidosFiltradosMesAbertos.length}} Abertos | R$ {{somaPedidosAbertosMesFormatado}}</p>
+    <p class="py-1 bg-green-200">{{pedidosFiltradosMesAprovados.length}} Aprovados | R$ {{somaPedidosAprovadosMesFormatado}}</p>
+    <p class="py-1 bg-orange-200">{{pedidosFiltradosMesReprovados.length}} Reprovados | R$ {{somaPedidosReprovadosMesFormatado}}</p>
+
   </div>
 
   <div class="shadow-lg bg-gray-100 px-2 py-4 basis-1/3 text-center rounded-md">
-    <h1 class="font-semibold mb-2" >Último ano</h1>
-      <p>x Orçamentos abertos</p>
-     <p>x Orçamentos reprovados</p>
-      <p>x Orçamentos aprovados</p>
+    <h1 class="font-semibold mb-2">Último ano</h1>
+    <p class="py-1">{{pedidosFiltradosAnoAbertos.length}} Abertos | R$ {{somaPedidosAbertosAnoFormatado}}</p>
+    <p class="py-1 bg-green-200">{{pedidosFiltradosAnoAprovados.length}} Aprovados | R$ {{somaPedidosAprovadosAnoFormatado}} </p>
+    <p class="py-1 bg-orange-200">{{pedidosFiltradosAnoReprovados.length}} Reprovados | R$ {{somaPedidosReprovadosAnoFormatado}}</p>
   </div>
 </div>
