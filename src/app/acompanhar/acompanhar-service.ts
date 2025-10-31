@@ -30,6 +30,12 @@ confirmarAlteracao(pedido: PedidoModel): Observable<PedidoModel> {
   return this.http.put<PedidoModel>(url, pedido, { headers });
 }
 
+confirmarAlteracaoItem(item: Item): Observable<Item> {
+  const headers = this.pedidoService.captarHeaders();
+  const url = `${this.apiUrl}/item/${item.id}`; // inclui o ID na URL
+  return this.http.put<Item>(url, item, { headers });
+}
+
 
 deleteItem(id: number): Observable<Item> {
   console.log("variavel id", id);

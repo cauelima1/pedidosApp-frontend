@@ -31,6 +31,8 @@ export class Acompanhamento implements OnInit {
   selecionarPedido?: PedidoModel;
   editarForm: FormGroup;
   itemForm: FormGroup;
+  editarItem: boolean = false;
+  itemParaEditar?: Item;
   statusSelecionado?: string;
   statusPedido?: string;
   mostrarPedido = false;
@@ -69,6 +71,7 @@ export class Acompanhamento implements OnInit {
       cofins: new FormControl('', Validators.required)
     }),
       this.itemForm = new FormGroup({
+        id: new FormControl,
         nome: new FormControl('', Validators.required),
         fabricante: new FormControl,
         tipo: new FormControl('', Validators.required),
@@ -85,12 +88,12 @@ export class Acompanhamento implements OnInit {
   }
 
   adicionarItem() {
+    this.editarItem = false;
     this.criarItem = true;
   }
 
   atualizarStatus(id: number) {
     this.pedidoSelecionado = this.pedidos?.find(p => p.id === this.selecionarPedido?.id)!;
-    console.log("Esté pedido é ", this.pedidoSelecionado);
     this.mostrarStatus = true;
   }
 
@@ -103,7 +106,6 @@ export class Acompanhamento implements OnInit {
           this.utilService.mostrarMensagem("Status alterado com sucesso.")
           this.mostrarPedido = true;
           this.inputsDesabilitados = true;
-          console.log("Novo Status do pedido:" + pedidoStatusNovo.statusPedido)
         },
         error: () => this.utilService.mostrarMensagem("Selecione uma opção!")
 
@@ -113,15 +115,12 @@ export class Acompanhamento implements OnInit {
     }
   }
 
-  limparFormPedido(){
-    
+  limparFormPedido() {
     window.location.reload();
-    
   }
 
   salvarItem() {
     this.itemForm.markAllAsTouched();
-    console.log(this.itemForm.valid)
     if (this.itemForm.valid) {
       const novoItem: Item = this.itemForm.value;
       novoItem.idPedido = this.pedidoSelecionado.id;
@@ -138,8 +137,39 @@ export class Acompanhamento implements OnInit {
     }
   }
 
-  editarItem(id: number){
+  carregarItemParaEdicao(item: Item) {
+    if (item) {
+      this.criarItem = false;
+      this.editarItem = true;
+      this.itemForm.patchValue({
+        id: item.id,
+        nome: item.nome,
+        fabricante: item.fabricante,
+        quantidade: item.quantidade,
+        tipo: item.tipo,
+        custo: item.custo,
+        obs: item.obs
+      });
+    } else {
+      console.log("Erro ao tentar editar este item.");
+    }
 
+    console.log("Mostrando formulário", this.itemForm.value);
+
+  }
+
+  concluirEdicaoItem() {
+    if (this.itemForm.value) {
+      this.service.confirmarAlteracaoItem(this.itemForm.value).subscribe({
+        next: () => {
+          this.utilService.mostrarMensagem("Item alterado com sucesso");
+        },
+        error: () => this.utilService.mostrarMensagem("Ocorreu algum erro.")
+      })
+    }
+
+    this.itemForm.reset();
+    this.editarItem = false;
   }
 
   carregarClientes(): void {
@@ -162,12 +192,11 @@ export class Acompanhamento implements OnInit {
 
 
   editar() {
-    console.log("ID selecionado", this.selecionarPedido?.id);
     this.editarPedido = true;
     this.clienteSelecionado = this.selecionarCliente;
     if (this.selecionarPedido) {
       this.pedidoSelecionado = this.pedidos?.find(p => p.id === this.selecionarPedido?.id)!;
-      console.log("Pedido Selecionado:", this.pedidoSelecionado);
+
       this.items = this.pedidoSelecionado.items;
       this.listarItems = true;
     }
