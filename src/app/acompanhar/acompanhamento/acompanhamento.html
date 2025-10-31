@@ -1,24 +1,26 @@
-<div class="bg-slate-100 py-2 shadow-sm">
+<div class="bg-transparent py-2 shadow-sm">
     <h1 class="text-2xl font-semibold text-center mb-2">Atualizar ou Modificar </h1>
 </div>
 
-<div class="flex p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
+<div class="flex p-4 max-w-screen-2xl mx-auto bg-transparent shadow-lg rounded-lg mt-6 mb-10">
     <div class="flex-col">
 
         @if(!selecionar){
         <div class="text-center">
             <label class="text-lg font-semibold mb-2">Cliente</label>
-            <select [(ngModel)]="selecionarCliente" name="selecionarCliente" [disabled]="inputsDesabilitados"
-                (change)="carregarPedidos(selecionarCliente?.cnpj || 0)" class="text-center border p-2 rounded w-100 mb-2 text-lg">
 
+            <select [(ngModel)]="selecionarCliente" name="selecionarCliente" [disabled]="inputsDesabilitados"
+                (change)="carregarPedidos(selecionarCliente?.cnpj || 0)"
+                class="bg-yellow-50 text-center border p-2 rounded w-100 mb-2 text-lg">
+                
                 @for(cliente of clientes; track cliente.nome){
                 <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
                 }
             </select>
 
-            <label class="text-lg font-semibold mb-2">Orçamento</label>
+            <label class="text-lg font-semibold mb-2">Orçamentos em aberto</label>
             <select [(ngModel)]="selecionarPedido" name="selecionarPedido" [disabled]="inputsDesabilitados"
-                class="text-center border p-2 rounded w-100 mb-2 text-lg">
+                class="text-center border p-2 rounded w-100 mb-2 text-lg bg-yellow-50">
 
                 @for(pedido of pedidos; track pedido.id){
                 <option [ngValue]="pedido" class="text-lg font-sans">{{pedido.id}}</option>
@@ -43,9 +45,10 @@
     <div class="flex flex-col justify-center">
 
         @if(mostrarStatus){
-        <label class="font-semibold text-2xl py-2">Atualizar para:</label>
-        <select [(ngModel)]="statusSelecionado" class="py-2 border text-xl" [disabled]="inputsDesabilitados">
-            <option [ngValue]="">Selecione uma opção</option>
+        <label class="font-semibold text-lg text-center py-2">Atualizar para:</label>
+        <select [(ngModel)]="statusSelecionado" class="bg-yellow-50 py-2 border text-xl"
+            [disabled]="inputsDesabilitados">
+            <option [ngValue]="null">Selecione um cliente</option>
             <option [ngValue]="'ENCERRADO_REPROVADO'">ENCERRADO_REPROVADO</option>
             <option [ngValue]="'ENCERRADO_APROVADO'">ENCERRADO_APROVADO</option>
         </select>
@@ -56,7 +59,7 @@
     </div>
 
     @if(mostrarPedido){
-    <div class="ml-4 flex flex-col p-4 bg-white rounded-lg shadow-md">
+    <div class="ml-4 flex flex-col p-4 bg-transparent rounded-lg shadow-md">
         <label class="text-gray-700 text-base font-medium">
             Identificação do Cliente: <span class="font-semibold text-gray-900">{{ selecionarCliente?.nome }}</span>
         </label>
@@ -78,7 +81,7 @@
 
 <!-- Editar Pedido -->
 @if(editarPedido){
-<div class="flex flex-col p-4 max-w-screen-2xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10">
+<div class="flex flex-col p-4 max-w-screen-2xl mx-auto bg-transparent shadow-lg rounded-lg mt-6 mb-10">
     <p class="text-center text-lg mb-2 font-semibold">Orçamento - {{ pedidoSelecionado.id }}</p>
     <p class="text-center text-lg mb-2 font-semibold">Cliente - {{ clienteSelecionado?.nome }}</p>
     <h1 class="text-2xl font-semibold text-center py-4">Editar</h1>
@@ -230,10 +233,10 @@
             <h1 class="text-2xl font-semibold text-center py-4">Produtos:</h1>
 
             @if (listarItems) {
-            <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 bg-gray-200 p-4">
+            <div class="overflow-x-auto rounded-lg shadow-md border border-transparent p-4">
                 <h1 class="text-2xl font-semibold text-center mb-2">Produtos:</h1>
                 <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
-                    <thead class="bg-gray-100 text-gray-700 uppercase tracking-wider">
+                    <thead class="bg-transparent text-gray-700 uppercase tracking-wider">
                         <tr>
                             <th class="px-4 py-2">#</th>
                             <th class="px-4 py-2">Nome</th>
@@ -278,7 +281,7 @@
                                     ✕
                                 </button>
 
-                                    <button
+                                <button
                                     class="text-red-500 hover:text-red-800 font-bold px-2 py-1 rounded transition-colors duration-200"
                                     (click)="editarItem(item.id)" title="Remover item">
                                     E
@@ -300,7 +303,7 @@
 
 
             @if(criarItem){
-            <div class="px-10 max-w-screen-xl mx-auto bg-white shadow rounded-lg mt-6 mb-10">
+            <div class="px-10 max-w-screen-xl mx-auto bg-transparent shadow rounded-lg mt-6 mb-10">
                 <h1 class="text-xl font-semibold text-center mb-4">Adicionar item</h1>
 
                 <form [formGroup]="itemForm" (ngSubmit)="salvarItem()" class="space-y-4">
@@ -309,7 +312,7 @@
                     <div>
                         <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome do produto:</label>
                         <textarea id="nome" name="nome" formControlName="nome"
-                            class="border border-gray-300 rounded px-3 py-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            class="border border-transparent rounded px-3 py-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                         @if(isCampoInvalidoItemForm('nome')){
                         <span class="text-red-500 text-sm">Campo obrigatório</span>
                         }
@@ -323,7 +326,7 @@
                             <label for="fabricante"
                                 class="block text-sm font-medium text-gray-700 mb-1">Fabricante:</label>
                             <input id="fabricante" name="fabricante" formControlName="fabricante"
-                                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                class="bg-transparent border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                         </div>
 
@@ -332,7 +335,7 @@
                             <label for="quantidade"
                                 class="block text-sm font-medium text-gray-700 mb-1">Quantidade:</label>
                             <input id="quantidade" name="quantidade" formControlName="quantidade" type="number"
-                                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                class="bg-transparent border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             @if(isCampoInvalidoItemForm('quantidade')){
                             <span class="text-red-500 text-sm">Campo obrigatório</span>
                             }
@@ -347,7 +350,7 @@
                             <label for="tipo" class="block text-sm font-medium text-gray-700 mb-1">Tipo de
                                 medida:</label>
                             <select id="tipo" name="tipo" formControlName="tipo"
-                                class="border border-gray-300 rounded px-3 py-2 w-full bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="bg-yellow-50 border border-gray-300 rounded px-3 py-2 w-full bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="PC">PC</option>
                                 <option value="M">M</option>
                             </select>
@@ -361,7 +364,7 @@
                             <label for="custo" class="block text-sm font-medium text-gray-700 mb-1">Custo
                                 unitário:</label>
                             <input id="custo" name="custo" formControlName="custo" type="number"
-                                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                class="bg-transparent border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                             @if(isCampoInvalidoItemForm('custo')){
                             <span class="text-red-500 text-sm">Campo obrigatório</span>
@@ -373,7 +376,7 @@
                     <div>
                         <label for="obs" class="block text-sm font-medium text-gray-700 mb-1">Observações:</label>
                         <textarea id="obs" name="obs" formControlName="obs"
-                            class="border border-gray-300 rounded px-3 py-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            class="bg-transparent border border-gray-300 rounded px-3 py-2 w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
 
                     <!-- Botão -->

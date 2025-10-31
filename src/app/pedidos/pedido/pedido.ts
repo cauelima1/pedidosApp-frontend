@@ -28,18 +28,19 @@ export class Pedido implements OnInit {
   verPedidos: boolean = false;
   selecionar: boolean = false;
   criarPedido: boolean = false;
-   criarItemEditado: boolean = false;
+  criarItemEditado: boolean = false;
   criarItem: boolean = false;
   listarItems: boolean = false;
   pedidos: PedidoModel[] = [];
   clientes: Cliente[] = [];
+  
   items: Item[] = [];
   pedidoForm: FormGroup;
   itemForm: FormGroup;
   idPedido?: number;
 
 
-  selecionarCliente?: Cliente;
+  selecionarCliente: Cliente | null = null;
   clienteSelecionado?: Cliente;
 
   constructor(private clientService: ClienteService,

@@ -22,7 +22,7 @@ export class ClienteComponent implements OnInit  {
   pesquisar: boolean = false;
   snack: MatSnackBar = inject(MatSnackBar);
   cadastroForm: FormGroup;
-  selecionarCliente?: Cliente;
+  selecionarCliente: Cliente | null = null; 
   formDesabilitado: boolean = true;
 
 

@@ -42,3 +42,10 @@ body { margin: 4; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+body {
+  @apply bg-cover bg-center bg-no-repeat;
+  background-color: #f8f8e5; /* opcional: cor de fallback */
+  background-blend-mode: luminosity; /* opcional: se usar gradiente + imagem */
+}

@@ -1,9 +1,9 @@
-<div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
+<div class="p-4 max-w-xl mx-auto bg-transparent shadow-lg rounded-lg mt-6 mb-10 w-full">
     <h1 class="text-2xl font-semibold text-center mb-2">Gestão de Clientes</h1>
     <hr class="border-l mb-2">
 
 
-    <select [(ngModel)]="selecionarCliente" name="selecionarCliente" class="border p-2 rounded w-full mb-2 text-lg">
+    <select [(ngModel)]="selecionarCliente" name="selecionarCliente" class="bg-yellow-50 border p-2 rounded w-full mb-2 text-lg">
         <option [ngValue]="null">Selecione um cliente</option>
         @for(cliente of clientes; track cliente.nome){
         <option [ngValue]="cliente" class="text-lg font-sans">{{cliente.nome}}</option>
@@ -103,7 +103,7 @@
 </div>
 
 
-<div class="p-4 max-w-xl mx-auto bg-gray-50 shadow-lg rounded-lg mt-6 mb-10 w-full">
+<div class="p-4 max-w-xl mx-auto bg-transparent shadow-lg rounded-lg mt-6 mb-10 w-full">
 
     @if(pesquisar){
     <form #ngform="ngForm" (ngSubmit)="alterarCliente()" class="mt-4">
